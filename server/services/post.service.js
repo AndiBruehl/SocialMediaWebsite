@@ -1,5 +1,6 @@
 import postModel from "../models/post.model.js";
 import userModel from "../models/user.model.js";
+import mongoose from "mongoose";
 
 export const createPost = async (body) => {
   try {
@@ -91,4 +92,97 @@ export const likeDislikePost = async (params, body) => {
     console.error("Error liking/unliking post:", error.message);
     throw error;
   }
+};
+
+// Add comment
+export const addCommentToPost = async ({ postId, userId, desc }) => {
+  const post = await postModel.findById(postId);
+  if (!post) throw new Error("Post not found");
+
+  post.comments.unshift({ userId, desc });
+  await post.save();
+  return post.comments;
+};
+
+// Delete comment
+export const deleteCommentFromPost = async ({ postId, commentId }) => {
+  const post = await postModel.findById(postId);
+  if (!post) throw new Error("Post not found");
+
+  post.comments = post.comments.filter(
+    (comment) => comment._id.toString() !== commentId
+  );
+  await post.save();
+  return post.comments;
+};
+
+// reply to comment
+export const replyToComment = async (postId, commentId, { userId, desc }) => {
+  const post = await postModel.findById(postId);
+  if (!post) {
+    console.error("❌ Post nicht gefunden:", postId);
+    throw new Error("Post not found");
+  }
+
+  const comment = post.comments.find(
+    (c) => c._id.toString() === commentId.toString()
+  );
+  if (!comment) {
+    console.error("❌ Kommentar nicht gefunden:", commentId);
+    throw new Error("Comment not found");
+  }
+
+  comment.replies.push({
+    userId,
+    desc: desc,
+    createdAt: new Date(),
+  });
+
+  await post.save();
+  return comment.replies;
+};
+
+// delete reply from comment
+export const deleteReplyFromComment = async (postId, commentId, replyId) => {
+  const post = await postModel.findById(postId);
+  if (!post) throw new Error("Post not found");
+
+  const comment = post.comments.find((c) => c._id.toString() === commentId);
+  if (!comment) throw new Error("Comment not found");
+
+  const replyIndex = comment.replies.findIndex(
+    (r) => r._id.toString() === replyId
+  );
+  if (replyIndex === -1) throw new Error("Reply not found");
+
+  comment.replies.splice(replyIndex, 1);
+  await post.save();
+
+  return comment.replies;
+};
+
+//like reply
+
+export const likeReply = async (postId, commentId, replyId, userId) => {
+  const post = await postModel.findById(postId);
+  if (!post) throw new Error("Post not found");
+
+  const comment = post.comments.find((c) => c._id.toString() === commentId);
+  if (!comment) throw new Error("Comment not found");
+
+  const reply = comment.replies.find((r) => r._id.toString() === replyId);
+  if (!reply) throw new Error("Reply not found");
+
+  const liked = reply.likes.includes(userId);
+
+  if (liked) {
+    // Already liked → remove
+    reply.likes = reply.likes.filter((id) => id.toString() !== userId);
+  } else {
+    // Not liked yet → add
+    reply.likes.push(userId);
+  }
+
+  await post.save();
+  return reply.likes;
 };

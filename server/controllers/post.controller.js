@@ -1,10 +1,15 @@
 import {
+  addCommentToPost,
+  deleteCommentFromPost,
   createPost,
   deletePost,
   getPost,
   getTimelinePosts,
   likeDislikePost,
+  likeReply,
   updatePost,
+  replyToComment,
+  deleteReplyFromComment,
 } from "../services/post.service.js";
 
 //createPost
@@ -107,6 +112,91 @@ export const getTimelinePostController = async (req, res) => {
     });
   } catch (error) {
     console.error("Error retrieving posts:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+//addCommentToPost
+
+export const addCommentToPostController = async (req, res) => {
+  try {
+    const comments = await addCommentToPost({
+      postId: req.params.postId,
+      userId: req.body.userId,
+      desc: req.body.desc,
+    });
+
+    res.status(200).json({ message: "Comment added", comments });
+  } catch (error) {
+    console.error("Error adding comment:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// deleteCommentFromPost
+
+export const deleteCommentFromPostController = async (req, res) => {
+  try {
+    const comments = await deleteCommentFromPost({
+      postId: req.params.postId,
+      commentId: req.params.commentId,
+    });
+
+    res.status(200).json({ message: "Comment removed", comments });
+  } catch (error) {
+    console.error("Error deleting comment:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// replyToComment
+
+export const replyToCommentController = async (req, res) => {
+  const { postId, commentId } = req.params;
+  const { userId, desc } = req.body;
+
+  try {
+    const replies = await replyToComment(postId, commentId, { userId, desc });
+    res.status(200).json(replies);
+  } catch (err) {
+    console.error("💥 Error adding reply:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// deleteReplyFromComment
+
+export const deleteReplyFromCommentController = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.params;
+    console.log("🔻 Deleting reply", { postId, commentId, replyId });
+
+    const updatedReplies = await deleteReplyFromComment(
+      postId,
+      commentId,
+      replyId
+    );
+    res.status(200).json({
+      message: "Reply deleted successfully",
+      replies: updatedReplies,
+    });
+  } catch (error) {
+    console.error("💥 Error deleting reply:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+//likeDislikeReply
+
+export const likeDislikeReplyController = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.params;
+    const { userId } = req.body;
+
+    const likes = await likeReply(postId, commentId, replyId, userId);
+    res.status(200).json({ message: "Reply like status updated", likes });
+  } catch (error) {
+    console.error("💥 Fehler beim Liken der Reply:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

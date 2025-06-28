@@ -3,11 +3,16 @@ import express from "express";
 const router = express.Router();
 
 import {
+  addCommentToPostController,
   createPostController,
+  deleteCommentFromPostController,
   deletePostController,
+  deleteReplyFromCommentController,
   getPostController,
   getTimelinePostController,
   likeDislikeController,
+  likeDislikeReplyController,
+  replyToCommentController,
   updatePostController,
 } from "../controllers/post.controller.js";
 
@@ -28,4 +33,26 @@ router.get("/get/:id", getPostController);
 
 // Get timeline posts
 router.get("/timeline", getTimelinePostController);
+
+// Add a comment to a post
+router.post("/comment/:postId", addCommentToPostController);
+
+//Delete a comment from a post
+router.delete("/comment/:postId/:commentId", deleteCommentFromPostController);
+
+// Add a comment to a comment
+router.post("/comment/:postId/:commentId/replies", replyToCommentController);
+
+// Delete a comment from a comment
+router.delete(
+  "/comment/:postId/:commentId/replies/:replyId",
+  deleteReplyFromCommentController
+);
+
+// Like or dislike a reply to a comment
+router.put(
+  "/comment/:postId/:commentId/replies/:replyId/like",
+  likeDislikeReplyController
+);
+
 export default router;
