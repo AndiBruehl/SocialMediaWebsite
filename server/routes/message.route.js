@@ -1,5 +1,6 @@
 import express from "express";
 import * as MessageController from "../controllers/message.controller.js";
+import * as GroupMessageController from "../controllers/group.controller.js";
 
 const router = express.Router();
 
