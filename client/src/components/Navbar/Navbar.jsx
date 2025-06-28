@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BiMenu, BiSearchAlt, BiX } from "react-icons/bi";
 import Logo from "../Logo/Logo.jsx";
-import Menu from "../Menu/Menu.jsx";
+import Menu from "../Menu/Menu";
 import SearchBar from "../SearchBar/SearchBar.jsx";
 import "./Navbar.css";
 
@@ -18,7 +18,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar">
+      <div className="navbar bg-slate-600 !bg-slate-600 text-white shadow-md">
         <div className="navbar-left">
           <Logo />
         </div>
