@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 body {
-  @apply bg-slate-100 text-blue-950;
+  @apply bg-slate-200 text-blue-900;
 }
 
 :root {
@@ -17,8 +17,9 @@ body {
   box-sizing: border-box;
   margin: 0;
   background: bg-slate-100;
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-bottom: 2%;
 }
 
 main {
