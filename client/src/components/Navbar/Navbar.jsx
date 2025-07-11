@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { BiMenu, BiMessageDetail, BiX, BiBell } from "react-icons/bi";
 import Logo from "../Logo/Logo.jsx";
 import Menu from "../Menu/Menu";
-import SearchBar from "../SearchBar/SearchBar.jsx";
+import SearchBar from "../Searchbar/Searchbar.jsx";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 
