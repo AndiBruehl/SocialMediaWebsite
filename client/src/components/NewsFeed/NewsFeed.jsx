@@ -1,6 +1,6 @@
 import React from "react";
-import Feed from "../Feed/Feed";
 import CreatePost from "../CreatePost/CreatePost";
+import Post from "../Post/Post";
 
 const NewsFeed = () => {
   return (
@@ -14,11 +14,12 @@ const NewsFeed = () => {
       }}
       className="bg-slate-200"
     >
-      <h1>NEWSFEED</h1>
+      <h1 className="text-3xl italic underline">NEWSFEED</h1>
       <br />
       <CreatePost />
       <br />
-      <Feed />
+      <hr />
+      <Post />{" "}
     </div>
   );
 };

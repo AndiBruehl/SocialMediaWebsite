@@ -5,7 +5,7 @@ const RightPanel = () => {
     <div
       style={{
         flex: 2,
-        height: "calc(90vh - 80px)",
+        height: "calc(100vh - 80px)",
       }}
       className="bg-slate-400 p-5 rounded-[15px] text-white"
     >

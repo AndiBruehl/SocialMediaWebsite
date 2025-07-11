@@ -9,7 +9,7 @@ import {
 
 const CreatePost = () => {
   return (
-    <div className="w-[95%] h-[225px] shadow-lg rounded-lg bg-slate-50">
+    <div className="w-[97%] h-[225px] shadow-lg rounded-lg bg-slate-50">
       <div className="wrapper p-[10px]">
         <div className="top flex items-center justify-between">
           <img
@@ -24,7 +24,7 @@ const CreatePost = () => {
           />
         </div>
         <hr />
-        <div className="bottom flex justify-start items-center space-x-4 mt-2">
+        <div className="bottom flex justify-start items-center space-x-4 m-2">
           <div className="flex items-center space-x-2 cursor-pointer">
             <MdPermMedia />
             <span className="cursor-pointer text-blue-500 rounded hover:text-blue-600 active:text-blue-700">
