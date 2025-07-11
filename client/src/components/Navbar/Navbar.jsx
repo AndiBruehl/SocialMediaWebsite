@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { BiMenu, BiMessageDetail, BiX } from "react-icons/bi";
+import { BiMenu, BiMessageDetail, BiX, BiBell } from "react-icons/bi";
 import Logo from "../Logo/Logo.jsx";
 import Menu from "../Menu/Menu";
 import SearchBar from "../SearchBar/SearchBar.jsx";
@@ -39,14 +39,19 @@ const Navbar = () => {
           />
         </div>
 
-        <div className="navbar-right gap-4">
+        <div className="navbar-right gap-2">
           <div className="relative">
             <Link to="/messages">
               <BiMessageDetail className="icon-size" />
               <span className="notification-badge">1</span>
             </Link>
           </div>
-
+          <div className="relative">
+            <Link to="/notifications">
+              <BiBell className="icon-size" />
+              <span className="notification-badge">2</span>
+            </Link>
+          </div>{" "}
           {isOpen ? (
             <BiX
               className="menu-icon icon-size"
