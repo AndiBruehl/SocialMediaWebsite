@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiMenu, BiSearchAlt, BiX } from "react-icons/bi";
 import Logo from "../Logo/Logo.jsx";
 import Menu from "../Menu/Menu";
@@ -7,18 +7,27 @@ import "./Navbar.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHoveringMenu, setIsHoveringMenu] = useState(false);
+  const timerRef = useRef(null);
 
-  // Auto-close after 5 seconds
   useEffect(() => {
-    if (isOpen) {
-      const timeout = setTimeout(() => setIsOpen(false), 5000);
-      return () => clearTimeout(timeout);
+    // Clear any previous timer
+    clearTimeout(timerRef.current);
+
+    // Only start timer if menu is open and not hovered
+    if (isOpen && !isHoveringMenu) {
+      timerRef.current = setTimeout(() => {
+        setIsOpen(false);
+      }, 4000);
     }
-  }, [isOpen]);
+
+    // Cleanup on unmount
+    return () => clearTimeout(timerRef.current);
+  }, [isOpen, isHoveringMenu]);
 
   return (
     <>
-      <div className="navbar bg-slate-600 !bg-slate-600 text-white shadow-md">
+      <div className="navbar bg-slate-600 text-white shadow-md">
         <div className="navbar-left">
           <Logo />
         </div>
@@ -38,7 +47,11 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className={`menu-container ${isOpen ? "open" : ""}`}>
+      <div
+        className={`menu-container ${isOpen ? "open" : ""}`}
+        onMouseEnter={() => setIsHoveringMenu(true)}
+        onMouseLeave={() => setIsHoveringMenu(false)}
+      >
         <Menu />
       </div>
     </>

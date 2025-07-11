@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Libertinus+Mono&display=swap");
 
+@import "tailwindcss";
+
+body {
+  @apply bg-slate-100 text-blue-950;
+}
+
 :root {
   --navbar-height: 80px;
 }
@@ -10,6 +16,7 @@ body {
   font-family: "Libertinus Mono", monospace;
   box-sizing: border-box;
   margin: 0;
+  background: bg-slate-100;
   padding-left: 5%;
   padding-right: 5%;
 }

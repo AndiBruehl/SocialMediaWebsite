@@ -1,30 +1,33 @@
-import { Link } from "react-router-dom";
-import "./menu.css";
-
 import { BiHomeAlt } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { CiViewTimeline } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
-const Menu = ({ isOpen }) => {
+const Menu = () => {
   return (
-    <div className={`menu ${isOpen ? "visible" : "hidden"}`}>
-      <Link to="/">
-        <span className="menu-link">
-          <span>HOME</span>
-          <BiHomeAlt />
-        </span>
+    <div className="fixed right-0 w-full md:w-[60vw] lg:w-[25vw] max-w-[225px] bg-slate-200 rounded-[8px] shadow-lg transform transition-transform duration-500 ease-in-out z-[999] p-5 flex flex-col gap-y-4 text-right mr-[1.5vw]">
+      <Link
+        to="/"
+        className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+      >
+        <span className="text-base font-medium">Home</span>
+        <BiHomeAlt className="text-xl" />
       </Link>
-      <Link to="/profile">
-        <span className="menu-link">
-          <span>PROFILE </span>
-          <CgProfile />
-        </span>
+
+      <Link
+        to="/profile"
+        className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+      >
+        <span className="text-base font-medium">Profile</span>
+        <CgProfile className="text-xl" />
       </Link>
-      <Link to="/">
-        <span className="menu-link">
-          <span>TIMELINE</span>
-          <CiViewTimeline />
-        </span>{" "}
+
+      <Link
+        to="/timeline"
+        className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+      >
+        <span className="text-base font-medium">Timeline</span>
+        <CiViewTimeline className="text-xl" />
       </Link>
     </div>
   );
