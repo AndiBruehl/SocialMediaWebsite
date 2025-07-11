@@ -12,7 +12,7 @@ const Friends = () => {
           <NavLink
             to={item.to}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 ${
+              `flex items-center gap-5 px-3 py-2 rounded-md transition-all duration-200 ${
                 isActive ? "bg-slate-600 font-semibold" : "hover:bg-slate-500"
               }`
             }

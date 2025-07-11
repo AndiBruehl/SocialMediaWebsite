@@ -1,52 +1,53 @@
-// Links.jsx
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { BiHomeAlt } from "react-icons/bi";
+import { MdGroups } from "react-icons/md";
+import { PiChatsBold } from "react-icons/pi";
+import { HiOutlineBookmark } from "react-icons/hi";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { LiaBriefcaseSolid } from "react-icons/lia";
+import { PiGraduationCapBold } from "react-icons/pi";
+import { FaRegCalendarCheck } from "react-icons/fa";
+import { RiMore2Fill } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
-import {
-  MdBookmark,
-  MdGolfCourse,
-  MdEmojiEvents,
-  MdGroup,
-  MdMessage,
-  MdOutlineDynamicFeed,
-  MdQuestionMark,
-  MdVideoLibrary,
-} from "react-icons/md";
-import { IoMdArrowRoundForward, IoMdBriefcase } from "react-icons/io";
-
-const navItems = [
-  { icon: <MdOutlineDynamicFeed />, label: "Feed", to: "/feed" },
-  { icon: <MdVideoLibrary />, label: "Videos", to: "/videos" },
-  { icon: <MdGroup />, label: "Groups", to: "/groups" },
-  { icon: <MdMessage />, label: "Chats", to: "/chats" },
-  { icon: <MdBookmark />, label: "Bookmarks", to: "/bookmarks" },
-  { icon: <MdQuestionMark />, label: "Questions", to: "/questions" },
-  { icon: <IoMdBriefcase />, label: "Jobs", to: "/jobs" },
-  { icon: <MdGolfCourse />, label: "Courses", to: "/courses" },
-  { icon: <MdEmojiEvents />, label: "Events", to: "/events" },
-  { icon: <IoMdArrowRoundForward />, label: "See more", to: "/events" },
-];
-
-const Links = () => {
+export default function Links() {
   return (
-    <ul className="flex flex-col gap-4 text-white">
-      {navItems.map((item, index) => (
-        <li key={index}>
-          <NavLink
-            to={item.to}
-            className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200 ${
-                isActive ? "bg-slate-600 font-semibold" : "hover:bg-slate-500"
-              }`
-            }
-          >
-            <span className="text-xl">{item.icon}</span>
-            <span>{item.label}</span>
-          </NavLink>
-        </li>
-      ))}
+    <ul className="sidebar-links">
+      <Link to="/" className="sidebar-link">
+        <BiHomeAlt className="sidebar-icon" />
+        <span className="link-text">Feed</span>
+      </Link>
+      <Link to="/groups" className="sidebar-link">
+        <MdGroups className="sidebar-icon" />
+        <span className="link-text">Groups</span>
+      </Link>
+      <Link to="/chats" className="sidebar-link">
+        <PiChatsBold className="sidebar-icon" />
+        <span className="link-text">Chats</span>
+      </Link>
+      <Link to="/bookmarks" className="sidebar-link">
+        <HiOutlineBookmark className="sidebar-icon" />
+        <span className="link-text">Bookmarks</span>
+      </Link>
+      <Link to="/questions" className="sidebar-link">
+        <AiOutlineQuestionCircle className="sidebar-icon" />
+        <span className="link-text">Questions</span>
+      </Link>
+      <Link to="/jobs" className="sidebar-link">
+        <LiaBriefcaseSolid className="sidebar-icon" />
+        <span className="link-text">Jobs</span>
+      </Link>
+      <Link to="/courses" className="sidebar-link">
+        <PiGraduationCapBold className="sidebar-icon" />
+        <span className="link-text">Courses</span>
+      </Link>
+      <Link to="/events" className="sidebar-link">
+        <FaRegCalendarCheck className="sidebar-icon" />
+        <span className="link-text">Events</span>
+      </Link>
+      <Link to="/more" className="sidebar-link">
+        <RiMore2Fill className="sidebar-icon" />
+        <span className="link-text">See more</span>
+      </Link>
     </ul>
   );
-};
-
-export default Links;
+}

@@ -71,7 +71,7 @@ const Navbar = () => {
         onMouseEnter={() => setIsHoveringMenu(true)}
         onMouseLeave={() => setIsHoveringMenu(false)}
       >
-        <Menu />
+        <Menu isOpen={isOpen} />{" "}
       </div>
     </>
   );

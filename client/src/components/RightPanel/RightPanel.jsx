@@ -1,7 +1,7 @@
 import React from "react";
 
 import { BiSolidGift } from "react-icons/bi";
-import adImage from "../../assets/ad.jpg";
+import adImage from "../../assets/ad.png";
 import profilePic from "../../assets/pic1.png";
 
 const RightPanel = () => {
