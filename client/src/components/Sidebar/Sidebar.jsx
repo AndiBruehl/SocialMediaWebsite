@@ -30,7 +30,6 @@ const Sidebar = () => {
         style={{
           flex: 2,
           height: "calc(100vh - 80px)",
-          msOverflowStyle: "none",
         }}
         className="custom-scrollbar overflow-y-auto"
       >

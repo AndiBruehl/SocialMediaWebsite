@@ -1,5 +1,6 @@
 import React from "react";
 import Feed from "../Feed/Feed";
+import CreatePost from "../CreatePost/CreatePost";
 
 const NewsFeed = () => {
   return (
@@ -7,12 +8,15 @@ const NewsFeed = () => {
       style={{
         flex: 6,
         height: "calc(100vh - 80px)",
-        justifyContent: "center",
+        display: "flex",
         alignItems: "center",
+        flexDirection: "column",
       }}
       className="bg-slate-200"
     >
-      NewsFeed
+      <h1>NEWSFEED</h1>
+      <br />
+      <CreatePost />
       <br />
       <Feed />
     </div>
