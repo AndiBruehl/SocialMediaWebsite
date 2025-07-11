@@ -71,6 +71,27 @@
   transform: translateX(0%);
 }
 
+.icon-size {
+  font-size: 28px; /* gleiche Größe für alle Icons */
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dc2626; /* Tailwind rot-600 */
+  color: white;
+  border-radius: 9999px;
+  font-weight: bold;
+  line-height: 1;
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 0 4%;

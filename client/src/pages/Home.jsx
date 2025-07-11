@@ -2,7 +2,7 @@ import React from "react";
 
 const home = () => {
   return (
-    <div>
+    <div style={{ cursor: "default" }}>
       I'm baby shoreditch lomo actually offal. Salvia celiac gluten-free
       tousled, poke knausgaard gatekeep vaporware. Neutral milk hotel fixie
       keffiyeh listicle artisan vegan disrupt humblebrag vibecession. Tilde

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { BiMenu, BiSearchAlt, BiX } from "react-icons/bi";
+import { BiMenu, BiMessageDetail, BiX } from "react-icons/bi";
 import Logo from "../Logo/Logo.jsx";
 import Menu from "../Menu/Menu";
 import SearchBar from "../SearchBar/SearchBar.jsx";
 import "./Navbar.css";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +39,24 @@ const Navbar = () => {
           />
         </div>
 
-        <div className="navbar-right">
+        <div className="navbar-right gap-4">
+          <div className="relative">
+            <Link to="/messages">
+              <BiMessageDetail className="icon-size" />
+              <span className="notification-badge">1</span>
+            </Link>
+          </div>
+
           {isOpen ? (
-            <BiX className="menu-icon" onClick={() => setIsOpen(false)} />
+            <BiX
+              className="menu-icon icon-size"
+              onClick={() => setIsOpen(false)}
+            />
           ) : (
-            <BiMenu className="menu-icon" onClick={() => setIsOpen(true)} />
+            <BiMenu
+              className="menu-icon icon-size"
+              onClick={() => setIsOpen(true)}
+            />
           )}
         </div>
       </div>
