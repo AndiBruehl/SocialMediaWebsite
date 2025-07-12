@@ -1,33 +1,29 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
-import pic1 from "../../assets/pic1.png"; // <-- Bild korrekt importieren
 
-const navItems = [{ label: "Violett Smith", to: "/username", img: pic1 }];
-
-const Friends = () => {
+const FriendsList = ({ friend }) => {
   return (
-    <ul className="flex flex-col gap-4 text-white">
-      {navItems.map((item, index) => (
-        <li key={index}>
+    <div>
+      <ul className="m-0 p-0">
+        <li className="flex items-center mb-2.5">
           <NavLink
-            to={item.to}
+            to={`/profile/${friend.username}`}
             className={({ isActive }) =>
-              `flex items-center gap-5 px-3 py-2 rounded-md transition-all duration-200 ${
+              `flex items-center gap-4 px-3 py-2 rounded-md transition-all duration-200 ${
                 isActive ? "bg-slate-600 font-semibold" : "hover:bg-slate-500"
               }`
             }
           >
             <img
-              src={item.img}
-              alt={item.label}
-              className="w-10 h-10 rounded-full object-cover"
+              src={friend.profilePicture}
+              alt="profilePic"
+              className="w-[40px] h-[40px] rounded-full object-cover"
             />
-            <span>{item.label}</span>
+            <span className="text-sm">{friend.username}</span>
           </NavLink>
         </li>
-      ))}
-    </ul>
+      </ul>
+    </div>
   );
 };
 
-export default Friends;
+export default FriendsList;
