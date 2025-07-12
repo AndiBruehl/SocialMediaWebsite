@@ -1,5 +1,5 @@
-import Home from "./Home";
-import Profile from "./Profile";
+import Home from "./Home/Home";
+import Profile from "./Profile/Profile";
 
 const pages = {
   Home,
