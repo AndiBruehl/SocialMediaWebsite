@@ -1,6 +1,6 @@
 import React from "react";
 import CreatePost from "../CreatePost/CreatePost";
-import Post from "../Post/Post";
+import Post from "../Post/Post.jsx";
 import { Posts } from "../../data/dummyData.js";
 
 const NewsFeed = () => {

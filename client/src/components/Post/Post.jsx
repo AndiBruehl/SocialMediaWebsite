@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { FcLike } from "react-icons/fc";
 import { BiSolidLike } from "react-icons/bi";
@@ -6,6 +6,14 @@ import { BiSolidLike } from "react-icons/bi";
 import { Users } from "../../data/dummyData";
 
 const Post = ({ post }) => {
+  const [like, setLike] = useState(post.like);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLike = () => {
+    setLike(isLiked ? like - 1 : like + 1);
+    setIsLiked(!isLiked);
+  };
+
   const user = Users.find((u) => u.id === post.userId);
   return (
     <>
@@ -42,9 +50,9 @@ const Post = ({ post }) => {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[5px] ml-[5%] mb-[2%] ">
-            <FcLike className="cursor-pointer" />
-            <BiSolidLike className="cursor-pointer" />
-            <span className="text-sm">{post.likes} like/s</span>
+            <FcLike className="cursor-pointer" onClick={handleLike} />
+            <BiSolidLike className="cursor-pointer" onClick={handleLike} />
+            <span className="text-sm">{like} like/s</span>
           </div>
           <div className="flex items-center gap-[5px] mr-[5%] mb-[2%]">
             <span className="text-sm cursor-pointer border-b-black border-b-[1px]">
