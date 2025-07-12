@@ -44,10 +44,6 @@ export default function Links() {
         <FaRegCalendarCheck className="sidebar-icon" />
         <span className="link-text">Events</span>
       </Link>
-      <Link to="/more" className="sidebar-link">
-        <RiMore2Fill className="sidebar-icon" />
-        <span className="link-text">See more</span>
-      </Link>
     </ul>
   );
 }

@@ -9,7 +9,7 @@ const home = () => {
       style={{
         cursor: "default",
         display: "flex",
-        alignItems: "center",
+        alignItems: "start",
       }}
     >
       <Sidebar />

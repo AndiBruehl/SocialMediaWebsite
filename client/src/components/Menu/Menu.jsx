@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Menu = () => {
   return (
-    <div className="fixed right-[-5] w-full md:w-[30vw] lg:w-[20vw] max-w-[225px] bg-slate-300 rounded-[8px] shadow-lg transform transition-transform duration-500 ease-in-out z-[999] p-5 flex flex-col gap-y-4 text-right mr-[1.5vw]">
+    <div className="fixed top-[0px] right-[2vw] w-[225px] bg-slate-300 rounded-[8px] shadow-lg transform transition-transform duration-500 ease-in-out z-[999] p-5 flex flex-col gap-y-4 text-right">
       <Link
         to="/"
         className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"

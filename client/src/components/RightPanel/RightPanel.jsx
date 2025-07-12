@@ -10,6 +10,7 @@ const RightPanel = () => {
       style={{
         flex: 2,
         height: "100vh - 80px",
+        marginLeft: "2%",
       }}
       className="bg-slate-400 p-5 rounded-[15px] text-white"
     >
