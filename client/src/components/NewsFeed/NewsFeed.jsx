@@ -7,7 +7,7 @@ const NewsFeed = () => {
   return (
     <div
       style={{
-        flex: 6,
+        flex: 8,
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
