@@ -1,19 +1,20 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar/Navbar.jsx";
 import Pages from "./pages";
-import "./index.css";
-import Sidebar from "./components/Sidebar/Sidebar.jsx";
+import MainLayout from "./MainLayout.jsx"; // Neu!
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <Sidebar />
-      <Routes>
+    <Routes>
+      {/* Layout mit Navbar + Sidebar */}
+      <Route element={<MainLayout />}>
         <Route path="/" element={<Pages.Home />} />
         <Route path="/profile" element={<Pages.Profile />} />
-      </Routes>
-    </div>
+      </Route>
+
+      {/* Login/Register ohne Layout */}
+      <Route path="/signin" element={<Pages.SignIn />} />
+      <Route path="/signup" element={<Pages.SignUp />} />
+    </Routes>
   );
 }
 

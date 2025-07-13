@@ -63,7 +63,7 @@ const RightPanel = () => {
               </span>
               <span className="">Erfurt</span>
             </div>
-          </div>{" "}
+          </div>
           <div className="mb-[30px]">
             <div className="mb-[10px]">
               <span className="font-semibold mr-[15px]  text-blue-900">
@@ -71,7 +71,7 @@ const RightPanel = () => {
               </span>
               <span className="">Erfurt</span>
             </div>
-          </div>{" "}
+          </div>
           <div className="mb-[30px]">
             <div className="mb-[10px]">
               <span className="font-semibold mr-[15px]  text-blue-900">
@@ -97,7 +97,7 @@ const RightPanel = () => {
                 className="object-cover h-[40px]  w-[40px] rounded-full "
               />
               <span>Friend One</span>
-            </div>{" "}
+            </div>
             <div>
               <img
                 src={profPic}
@@ -105,7 +105,7 @@ const RightPanel = () => {
                 className="object-cover h-[40px]  w-[40px] rounded-full "
               />
               <span>Friend One</span>
-            </div>{" "}
+            </div>
             <div>
               <img
                 src={profPic}
@@ -113,7 +113,7 @@ const RightPanel = () => {
                 className="object-cover h-[40px]  w-[40px] rounded-full "
               />
               <span>Friend One</span>
-            </div>{" "}
+            </div>
             <div>
               <img
                 src={profPic}

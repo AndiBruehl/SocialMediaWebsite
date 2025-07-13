@@ -30,19 +30,19 @@ const CreatePost = () => {
             <span className="cursor-pointer text-blue-500 rounded hover:text-blue-600 active:text-blue-700">
               Media
             </span>
-          </div>{" "}
+          </div>
           <div className="flex items-center space-x-2 cursor-pointer">
             <MdLabel />
             <span className="cursor-pointer text-blue-500 rounded hover:text-blue-600 active:text-blue-700">
               Tags
             </span>
-          </div>{" "}
+          </div>
           <div className="flex items-center space-x-2 cursor-pointer">
             <MdEmojiEmotions />
             <span className="cursor-pointer text-blue-500 rounded hover:text-blue-600 active:text-blue-700">
               Emoji
             </span>
-          </div>{" "}
+          </div>
           <div className="flex items-center space-x-2 cursor-pointer">
             <MdLocationPin />
             <span className="cursor-pointer text-blue-500 rounded hover:text-blue-600 active:text-blue-700">

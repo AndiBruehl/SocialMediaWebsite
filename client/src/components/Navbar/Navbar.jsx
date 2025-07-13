@@ -51,7 +51,7 @@ const Navbar = () => {
               <BiBell className="icon-size" />
               <span className="notification-badge">2</span>
             </Link>
-          </div>{" "}
+          </div>
           {isOpen ? (
             <BiX
               className="menu-icon icon-size"
@@ -71,10 +71,11 @@ const Navbar = () => {
         onMouseEnter={() => setIsHoveringMenu(true)}
         onMouseLeave={() => setIsHoveringMenu(false)}
       >
-        <Menu isOpen={isOpen} />{" "}
+        <Menu isOpen={isOpen} />
       </div>
     </>
   );
 };
 
+console.log("navbar loaded");
 export default Navbar;

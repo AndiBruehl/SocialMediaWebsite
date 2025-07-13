@@ -16,7 +16,7 @@ const NewsFeed = () => {
       className="bg-slate-200"
     >
       {/*      <h1 className="text-3xl italic underline">NEWSFEED</h1>
-       */}{" "}
+       */}
       <br />
       <CreatePost />
       <br />

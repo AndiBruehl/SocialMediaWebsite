@@ -14,7 +14,7 @@ const OnlineUsers = ({ user }) => {
             <span className="w-[12px] h-[12px] rounded-full bg-green-600 absolute top-[-2px] right-0 border-[2px]"></span>
           </div>
           <span className="text-sm ml-3">{user.username}</span>
-        </li>{" "}
+        </li>
       </ul>
     </div>
   );

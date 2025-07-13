@@ -29,7 +29,7 @@ const Post = ({ post }) => {
               <span className="font-bold mr-2.5">{user?.username}</span>
 
               <span className="text-xs">{post.date}</span>
-            </div>{" "}
+            </div>
             <div>
               <MdOutlineMoreVert className="text-xl cursor-pointer" />
             </div>
