@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CreatePost from "../CreatePost/CreatePost";
 import Post from "../Post/Post.jsx";
 import { Posts } from "../../data/dummyData.js";
+import axiosInstance from "../../utils/api/axiosInstance";
 
 const NewsFeed = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const timelinePosts = async () => {
+      try {
+        const res = await axiosInstance.get(
+          "/post/timeline/685ead8decc284f95632bd55"
+        );
+
+        setPosts(res.data.timelinePosts);
+        console.log(res.data);
+      } catch (error) {
+        console.log("Fehler beim Laden der Posts:", error);
+      }
+    };
+
+    timelinePosts();
+  }, []);
+
   return (
     <div
       style={{
@@ -15,15 +34,15 @@ const NewsFeed = () => {
       }}
       className="bg-slate-200"
     >
-      {/*      <h1 className="text-3xl italic underline">NEWSFEED</h1>
-       */}
       <br />
       <CreatePost />
       <br />
       <hr />
-      {Posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      {posts
+        .filter((post) => post && post._id && post.userId)
+        .map((post) => (
+          <Post key={post._id} post={post} />
+        ))}
       <br />
       <hr />
     </div>

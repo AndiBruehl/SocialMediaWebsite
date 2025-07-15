@@ -1,9 +1,3 @@
-//const express = require("express");
-//const app = express();
-//const dotenv = require("dotenv");
-//const helmet = require("helmet");
-//const morgan = require("morgan");
-
 import express from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
@@ -19,7 +13,12 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
-app.use(cors()); // Enable CORS for all routes
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(routes);
 

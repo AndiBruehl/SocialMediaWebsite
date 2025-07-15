@@ -32,7 +32,7 @@ router.put("/like/:id", likeDislikeController);
 router.get("/get/:id", getPostController);
 
 // Get timeline posts
-router.get("/timeline", getTimelinePostController);
+router.get("/timeline/:userId", getTimelinePostController);
 
 // Add a comment to a post
 router.post("/comment/:postId", addCommentToPostController);

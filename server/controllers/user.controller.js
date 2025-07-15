@@ -65,7 +65,7 @@ export const getUserController = async (req, res) => {
     const user = await getUser(req.params.id);
 
     res.status(200).json({
-      user,
+      userInfo: user,
       message: "User fetched successfully",
     });
   } catch (error) {
