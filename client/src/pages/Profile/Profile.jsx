@@ -1,5 +1,5 @@
 import React from "react";
-import RightPanel from "../../components/RightPanel/RightPanel";
+import { RightPanelProfile } from "../../components/RightPanel/RightPanel";
 import NewsFeed from "../../components/NewsFeed/NewsFeed";
 import coverImage from "./assets/cover.jpg";
 import userImage from "./assets/userImage.jpg";
@@ -34,7 +34,7 @@ const Profile = () => {
       </div>
       <div className="flex mt-[3%]">
         <NewsFeed />
-        <RightPanel />
+        <RightPanelProfile />
       </div>
 
       <div></div>

@@ -1,5 +1,5 @@
-import Navbar from "../src/components/Navbar/Navbar.jsx";
-import Sidebar from "../src/components/Sidebar/Sidebar.jsx";
+import Navbar from "../components/Navbar/Navbar.jsx";
+import Sidebar from "../components/Sidebar/Sidebar.jsx";
 import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {

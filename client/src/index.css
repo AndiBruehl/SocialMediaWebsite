@@ -23,6 +23,11 @@ body {
   margin-bottom: 150px;
 }
 
+body.auth-page {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 main {
   padding-top: var(--navbar-height);
   padding-left: 60px;
