@@ -1,46 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
 import { RightPanelProfile } from "../../components/RightPanel/RightPanel";
 import NewsFeed from "../../components/NewsFeed/NewsFeed";
-import coverImage from "./assets/cover.jpg";
-import userImage from "./assets/userImage.jpg";
+import axiosInstance from "../../utils/api/axiosInstance";
+
+import defaultAvatar from "../../assets/avatar.webp";
 
 const Profile = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosInstance.get(`/users/${userId}`);
+        setUser(res.data.userInfo);
+      } catch (err) {
+        console.error("Error loading profile:", err);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading profile…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col rounded-[25%]">
-      <div
-        style={{
-          flex: 9,
-          backgroundColor: "white",
-        }}
-      >
-        <div>
-          <div className="h-[350] relative">
+      {/* Cover + Profile Picture */}
+      <div style={{ flex: 9, backgroundColor: "white" }}>
+        <div className="relative h-[200px] bg-gray-100">
+          {user.coverPicture?.trim() && (
             <img
-              src={coverImage}
+              src={user.coverPicture}
               alt="coverImage"
-              className="w-full h-[200px] object-cover "
+              className="w-full h-[200px] object-cover"
             />
-            <img
-              src={userImage}
-              alt="userImage"
-              className="h-[100px] w-[100px] object-cover rounded-full absolute left-0 right-0 m-auto top-[150px] border-4 border-slate-150"
-            />
-          </div>
-          <div className="flex flex-col items-center mt-[75px] ml-[2%] mr-[2%]">
-            <h1 className="font-bold text-2xl">Kwaku Sam</h1>
-            <span>I'm new here and love to explore new opportunities. </span>
-          </div>
+          )}
+          <img
+            src={user.profilePicture?.trim() || defaultAvatar}
+            alt="profilePic"
+            className="h-[100px] w-[100px] object-cover rounded-full absolute left-0 right-0 m-auto top-[150px] border-4 border-white shadow-md"
+          />
+        </div>
+
+        {/* Username + Bio */}
+        <div className="flex flex-col items-center mt-[75px] mx-[2%]">
+          <h1 className="font-bold text-2xl">
+            {user.username || "Unknown user"}
+          </h1>
+          <span className="text-sm text-gray-600 mb-[5%]">
+            {typeof user.desc === "string" && user.desc.trim()
+              ? user.desc
+              : "No bio available"}
+          </span>
         </div>
       </div>
-      <div className="flex mt-[3%]">
-        <NewsFeed />
-        <RightPanelProfile />
-      </div>
 
-      <div></div>
+      {/* Feed + Right Panel */}
+      <div className="flex mt-[3%]">
+        <NewsFeed userId={userId} />
+        <RightPanelProfile user={user} />
+      </div>
     </div>
   );
 };
 
-console.log("Profile loaded");
 export default Profile;

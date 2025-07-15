@@ -46,7 +46,7 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
-  relationnship: {
+  relationship: {
     type: Number,
     enum: [1, 2, 3], // 1: Single, 2: In a relationship, 3: It's complicated
     default: 1,

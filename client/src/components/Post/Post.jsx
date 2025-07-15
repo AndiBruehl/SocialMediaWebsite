@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { formatDistanceToNow } from "date-fns";
 
+import { Link } from "react-router-dom";
+
 import { MdOutlineMoreVert } from "react-icons/md";
 import { FcLike } from "react-icons/fc";
 import { BiSolidLike } from "react-icons/bi";
@@ -43,14 +45,22 @@ const Post = ({ post }) => {
         <div className="p-[10px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <img
-                src={user?.profilePicture || avatar}
-                alt="profilePic"
-                className="w-[25px] h-[25px] rounded-full m-2"
-              />
-              {user.username && (
-                <span className="font-bold mr-2.5">{user.username}</span>
-              )}
+              <Link
+                className="cursor-pointer flex flex-row items-center group relative"
+                to={`/profile/${post.userId}`}
+                title={`Visit ${user.username ?? "User"}’s Profile`}
+              >
+                <img
+                  src={
+                    user?.profilePicture?.trim() ? user.profilePicture : avatar
+                  }
+                  alt="profilePic"
+                  className="w-[25px] h-[25px] rounded-full m-2"
+                />
+                {user.username && (
+                  <span className="font-bold mr-2.5">{user.username}</span>
+                )}
+              </Link>
               <span className="text-xs text-gray-500">
                 {formatDistanceToNow(new Date(post.createdAt), {
                   addSuffix: true,
@@ -95,4 +105,5 @@ const Post = ({ post }) => {
   );
 };
 
+console.log();
 export default Post;

@@ -8,7 +8,8 @@ function App() {
       {/* Layout mit Navbar + Sidebar */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Pages.Home />} />
-        <Route path="/profile" element={<Pages.Profile />} />
+        <Route path="/profile/:userId" element={<Pages.Profile />} />
+        <Route path="/profile/:userId/edit" element={<Pages.ProfileEdit />} />
       </Route>
 
       {/* Login/Register ohne Layout */}

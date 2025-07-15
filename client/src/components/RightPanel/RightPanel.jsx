@@ -38,7 +38,21 @@ export const RightPanelHome = () => {
 };
 
 // RightPanelProfile – Profilansicht
-export const RightPanelProfile = () => {
+export const RightPanelProfile = ({ user }) => {
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <p>Loading profile details…</p>
+      </div>
+    );
+  }
+
+  const relationshipMap = {
+    1: "Single",
+    2: "In a relationship",
+    3: "Married",
+  };
+
   return (
     <div
       style={{
@@ -51,26 +65,24 @@ export const RightPanelProfile = () => {
       className="bg-slate-400 p-5 rounded-[15px] text-white"
     >
       <h1 className="font-bold text-xl mb-[20px]">User Info</h1>
+
       <div className="mb-[30px]">
         <div className="mb-[10px]">
-          <span className="font-semibold mr-[15px]  text-blue-900">City:</span>
-          <span>Erfurt</span>
+          <span className="font-semibold mr-[15px] text-blue-900">City:</span>
+          <span>{user.city || user.location || "Not specified"}</span>
         </div>
-      </div>
-      <div className="mb-[30px]">
         <div className="mb-[10px]">
-          <span className="font-semibold mr-[15px]  text-blue-900">From:</span>
-          <span>Erfurt</span>
+          <span className="font-semibold mr-[15px] text-blue-900">From:</span>
+          <span>{user.from || "Not specified"}</span>
         </div>
-      </div>
-      <div className="mb-[30px]">
         <div className="mb-[10px]">
-          <span className="font-semibold mr-[15px]  text-blue-900">
+          <span className="font-semibold mr-[15px] text-blue-900">
             Relationship:
           </span>
-          <span>Single</span>
+          <span>{relationshipMap[user.relationship] || "Unknown"}</span>
         </div>
       </div>
+
       <h1 className="font-bold text-xl mt-[50px] mb-[20px]">Friends</h1>
       <div
         className="grid grid-cols-2"
@@ -88,7 +100,7 @@ export const RightPanelProfile = () => {
               alt="Friend"
               className="object-cover h-[40px] w-[40px] rounded-full"
             />
-            <span>Friend One</span>
+            <span>Friend {idx + 1}</span>
           </div>
         ))}
       </div>

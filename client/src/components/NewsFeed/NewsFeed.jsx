@@ -13,7 +13,11 @@ const NewsFeed = () => {
           "/post/timeline/685ead8decc284f95632bd55"
         );
 
-        setPosts(res.data.timelinePosts);
+        const sortedPosts = res.data.timelinePosts.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setPosts(sortedPosts);
+
         console.log(res.data);
       } catch (error) {
         console.log("Fehler beim Laden der Posts:", error);
