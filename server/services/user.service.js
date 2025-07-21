@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import UserModel from "../models/user.model.js";
+import User from "../models/user.model.js";
 
 //Update user
 
@@ -152,5 +153,15 @@ export const getFollowing = async (userId) => {
   } catch (error) {
     console.error("Error fetching following:", error.message);
     throw new Error(error.message);
+  }
+};
+export const newUser = async (body) => {
+  try {
+    const newUser = new UserModel(body);
+    await newUser.save();
+    return newUser;
+  } catch (error) {
+    console.error("Error creating user:", error.message);
+    throw error;
   }
 };

@@ -5,6 +5,7 @@ import {
   unfollowUser,
   updateUser,
   getAllUsers,
+  newUser,
 } from "../services/user.service.js";
 
 //updateUserController
@@ -120,6 +121,24 @@ export const unfollowUserController = async (req, res) => {
     });
   } catch (error) {
     console.error("Error unfollowing user:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// create User
+
+// controller
+
+export const createUserController = async (req, res) => {
+  try {
+    const created = await newUser(req.body);
+
+    res.status(201).json({
+      message: "User created successfully",
+      newUser: created,
+    });
+  } catch (error) {
+    console.error("Error creating User:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

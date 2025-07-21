@@ -12,6 +12,7 @@ export const createPost = async (body) => {
     throw error;
   }
 };
+
 export const getPost = async (params) => {
   try {
     const post = await postModel.findById(params.id);
