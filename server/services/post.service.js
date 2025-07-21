@@ -25,16 +25,19 @@ export const getPost = async (params) => {
 
 export const getTimelinePosts = async (params) => {
   try {
-    const currentUser = await userModel.findById(params.userId);
+    const currentUser = await userModel.findById(params.userId); // ← FIX HIER
+
     const userPosts = await postModel.find({ userId: currentUser._id });
+
     const timelinePosts = await Promise.all(
-      currentUser.followers.map((friendId) => {
+      currentUser.following.map((friendId) => {
         return postModel.find({ userId: friendId });
       })
     );
-    return userPosts.concat({ ...timelinePosts });
+
+    return userPosts.concat(...timelinePosts); // ← auch FIX: ...spread
   } catch (error) {
-    console.error("Error fetching posts:", error.message);
+    console.error("❌ Error fetching timeline posts:", error.message);
     throw error;
   }
 };
@@ -186,4 +189,14 @@ export const likeReply = async (postId, commentId, replyId, userId) => {
 
   await post.save();
   return reply.likes;
+};
+
+export const getPostsByUserId = async (userId) => {
+  try {
+    const posts = await postModel.find({ userId });
+    return posts;
+  } catch (error) {
+    console.error("Error fetching user's posts:", error.message);
+    throw error;
+  }
 };

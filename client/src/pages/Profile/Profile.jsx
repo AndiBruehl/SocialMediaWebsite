@@ -70,7 +70,7 @@ const Profile = () => {
 
       {/* Feed + Right Panel */}
       <div className="flex mt-[3%]">
-        <NewsFeed userId={userId} />
+        <NewsFeed userId={userId} userPosts />
         <RightPanelProfile user={user} />
       </div>
     </div>

@@ -9,6 +9,7 @@ import {
   deletePostController,
   deleteReplyFromCommentController,
   getPostController,
+  getUserPostsController,
   getTimelinePostController,
   likeDislikeController,
   likeDislikeReplyController,
@@ -54,5 +55,9 @@ router.put(
   "/comment/:postId/:commentId/replies/:replyId/like",
   likeDislikeReplyController
 );
+
+// get posts by userId
+
+router.get("/user/:userId", getUserPostsController);
 
 export default router;

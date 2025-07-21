@@ -1,31 +1,40 @@
 import React, { useEffect, useState } from "react";
 import CreatePost from "../CreatePost/CreatePost";
 import Post from "../Post/Post.jsx";
-import { Posts } from "../../data/dummyData.js";
 import axiosInstance from "../../utils/api/axiosInstance";
+import { useParams } from "react-router-dom";
+
+const userIdTemp = "685ead8decc284f95632bd55"; // fallback für Feed
 
 const NewsFeed = () => {
   const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    const timelinePosts = async () => {
-      try {
-        const res = await axiosInstance.get(
-          "/post/timeline/685ead8decc284f95632bd55"
-        );
+  const { userId } = useParams(); // von Route → wenn vorhanden, dann Profilseite
 
-        const sortedPosts = res.data.timelinePosts.sort(
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const isProfilePage = Boolean(userId);
+        const endpoint = isProfilePage
+          ? `/post/user/${userId}`
+          : `/post/timeline/${userIdTemp}`;
+
+        const res = await axiosInstance.get(endpoint);
+
+        // Je nach Route: Zugriff auf `posts` oder `timelinePosts`
+        const postData = res.data.posts || res.data.timelinePosts || [];
+
+        const sortedPosts = postData.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        setPosts(sortedPosts);
 
-        console.log(res.data);
+        setPosts(sortedPosts);
       } catch (error) {
-        console.log("Fehler beim Laden der Posts:", error);
+        console.error("Fehler beim Laden der Posts:", error);
       }
     };
 
-    timelinePosts();
-  }, []);
+    fetchPosts();
+  }, [userId]);
 
   return (
     <div

@@ -200,3 +200,18 @@ export const likeDislikeReplyController = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+//getPostsByUserId
+
+import { getPostsByUserId } from "../services/post.service.js";
+
+export const getUserPostsController = async (req, res) => {
+  try {
+    const posts = await getPostsByUserId(req.params.userId);
+    res.status(200).json({ posts });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching posts", error: error.message });
+  }
+};
