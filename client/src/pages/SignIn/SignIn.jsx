@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import logo from "../../../public/logo.png";
 import { Link } from "react-router-dom";
 import { FaArrowRightToBracket, FaQuestion } from "react-icons/fa6";
 import AuthLayout from "../../layout/AuthLayout";
+import { AuthContext } from "../../context/AuthContext";
+import { loginAuth } from "../../utils/api/auth.api";
 
 const SignIn = () => {
   useEffect(() => {
@@ -40,12 +42,16 @@ const SignIn = () => {
     return !newErrors.email && !newErrors.password;
   };
 
+  const { user, isFetching, error, dispatch } = useContext(AuthContext);
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log(auth); // Später: API-Aufruf
+      loginAuth({ email: auth.email, password: auth.password }, dispatch);
     }
   };
+
+  console.log(user);
 
   return (
     <AuthLayout>
