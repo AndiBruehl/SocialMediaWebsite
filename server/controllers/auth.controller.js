@@ -6,10 +6,10 @@ export const register = async (req, res) => {
   try {
     const newUser = await registerUser(req.body);
 
-    const { password, ...data } = newUser._doc;
+    const { password, ...userData } = newUser._doc;
     res
       .status(201)
-      .json({ user: data, message: "User registered successfully" });
+      .json({ user: userData, message: "User registered successfully" });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
