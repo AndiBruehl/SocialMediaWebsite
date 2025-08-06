@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import logo from "../../../public/logo.png";
 import { Link } from "react-router-dom";
@@ -12,6 +12,40 @@ const SignIn = () => {
       document.body.classList.remove("auth-page");
     };
   }, []);
+
+  const [auth, setAuth] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const validateForm = () => {
+    const newErrors = { email: "", password: "" };
+
+    if (!auth.email) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(auth.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!auth.password) {
+      newErrors.password = "Password is required.";
+    }
+
+    setErrors(newErrors);
+    return !newErrors.email && !newErrors.password;
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log(auth); // Später: API-Aufruf
+    }
+  };
 
   return (
     <AuthLayout>
@@ -56,40 +90,76 @@ const SignIn = () => {
                 <span>Great to see you again!</span>
               </div>
               <br />
-              <div className="flex flex-col gap-3 mb-6">
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="border px-3 py-2 rounded"
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="border px-3 py-2 rounded"
-                />
-              </div>
-              <br />
-              <Link
-                to="/signup"
-                className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
-              >
-                <span className="text-sm">Reset Password</span>
-                <FaQuestion className="text-xl" />
-              </Link>
-              <br />
-              <div>
-                <button className="cursor-pointer bg-blue-500 font-bold text-white px-4 py-2 rounded hover:bg-blue-600">
-                  Join!
-                </button>
-              </div>
-              <br />
-              <Link
-                to="/signup"
-                className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
-              >
-                <span className="text-sm">Not registered yet?</span>
-                <FaArrowRightToBracket className="text-xl" />
-              </Link>
+
+              <form onSubmit={handleLogin}>
+                <div className="flex flex-col gap-3 mb-6">
+                  {/* E-Mail Eingabefeld */}
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    className={`border px-3 py-2 rounded ${
+                      errors.email ? "border-red-500" : ""
+                    }`}
+                    value={auth.email}
+                    onChange={(e) =>
+                      setAuth((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm">{errors.email}</p>
+                  )}
+
+                  {/* Passwort Eingabefeld */}
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    className={`border px-3 py-2 rounded ${
+                      errors.password ? "border-red-500" : ""
+                    }`}
+                    value={auth.password}
+                    onChange={(e) =>
+                      setAuth((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">{errors.password}</p>
+                  )}
+                </div>
+
+                <br />
+
+                <Link
+                  to="/signup"
+                  className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+                >
+                  <span className="text-sm">Reset Password</span>
+                  <FaQuestion className="text-xl" />
+                </Link>
+
+                <br />
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="cursor-pointer bg-blue-500 font-bold text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Join!
+                  </button>
+                </div>
+
+                <br />
+
+                <Link
+                  to="/signup"
+                  className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+                >
+                  <span className="text-sm">Not registered yet?</span>
+                  <FaArrowRightToBracket className="text-xl" />
+                </Link>
+              </form>
             </div>
           </div>
         </motion.div>
@@ -97,7 +167,5 @@ const SignIn = () => {
     </AuthLayout>
   );
 };
-
-console.log();
 
 export default SignIn;
