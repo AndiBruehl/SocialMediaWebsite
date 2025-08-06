@@ -4,8 +4,12 @@ export const loginAuth = async (userInfo, dispatch) => {
   dispatch({ type: "LOGIN_START" });
   try {
     const res = await axiosInstance.post("/auth/login", userInfo);
-    console.log(res.data); // Überprüfe, was zurückkommt
-    dispatch({ type: "LOGIN_SUCCESS", payload: res.data.userData });
+    const user = res.data.user;
+
+    // Speichern der Benutzerdaten im localStorage
+    localStorage.setItem("user", JSON.stringify(user));
+
+    dispatch({ type: "LOGIN_SUCCESS", payload: user }); // Benutzer wird hier gesetzt
   } catch (error) {
     dispatch({ type: "LOGIN_FAILURE", payload: error });
   }
