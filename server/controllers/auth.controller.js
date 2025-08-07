@@ -1,4 +1,8 @@
 import { registerUser, loginUser } from "../services/auth.service.js";
+import jwt from "jsonwebtoken";
+
+import dotenv from "dotenv";
+dotenv.config();
 
 //Register
 
@@ -21,8 +25,18 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const user = await loginUser(req.body);
+
+    console.log("👤 user._id:", user._id); // <-- Hinzufügen!
+
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
     res.status(200).json({
       message: "User logged in successfully",
+      token,
       user,
     });
   } catch (error) {

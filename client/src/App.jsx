@@ -6,7 +6,7 @@ import MainLayout from "./layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
-  const { user, isFetching } = useContext(AuthContext); // Benutzer und Ladezustand aus dem AuthContext holen
+  const { isFetching } = useContext(AuthContext); // Benutzer und Ladezustand aus dem AuthContext holen
 
   if (isFetching) {
     return <div>Loading...</div>; // Ladeanzeige, wenn die Authentifizierung noch läuft

@@ -1,154 +1,194 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axiosInstance from "../../utils/api/axiosInstance"; // ⬅️ oder je nach Pfad
 
-const ProfileEdit = () => {
-  const { userId } = useParams();
-  const testUserId = "685edfa69d8de17c6b7a0b07";
-  const effectiveUserId = userId || testUserId;
+import "./ProfileEdit.css";
 
-  const [userData, setUserData] = useState({
-    name: "",
+const EditProfile = () => {
+  const { userId } = useParams(); // userId aus der URL
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    username: "",
+    desc: "",
     location: "",
-    origin: "",
-    bio: "",
-    profilePicture: "",
-    coverPicture: "",
+    from: "",
+    relationship: 1,
   });
 
-  // JWT aus localStorage holen
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
+  const [profileFile, setProfileFile] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
+
+  const profileInputRef = useRef();
+  const coverInputRef = useRef();
+
+  const [localUser] = useState(() => {
+    const raw = localStorage.getItem("user");
+    try {
+      const parsed = JSON.parse(raw);
+      return parsed?.user || parsed || null;
+    } catch {
+      return null;
+    }
+  });
+
+  console.log("📦 userId from URL:", userId);
+  console.log("🧠 localUser._id from localStorage:", localUser?._id);
+
   const token = localStorage.getItem("token");
 
+  // Beim ersten Mount: Zugriffsprüfung und Daten vorbefüllen
+  // useEffect(() => {
+  //   if (!localUser || localUser._id !== userId) {
+  //     alert("Unberechtigter Zugriff.");
+  //     navigate("/");
+  //     return;
+  //   }
+
+  //   setFormData({
+  //     username: localUser.username || "",
+  //     desc: localUser.desc || "",
+  //     location: localUser.location || "",
+  //     from: localUser.from || "",
+  //     relationship: localUser.relationship || 1,
+  //   });
+  // }, [userId, navigate, localUser]);
+
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/users/${effectiveUserId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = res.data;
+    if (!localUser || localUser._id !== userId) {
+      alert("Unberechtigter Zugriff.");
+      navigate("/");
+      return;
+    }
 
-        setUserData({
-          name: data.name || "",
-          location: data.location || "",
-          origin: data.origin || "",
-          bio: data.bio || "",
-          profilePicture: data.profilePicture || "",
-          coverPicture: data.coverPicture || "",
-        });
-      } catch (err) {
-        console.error("Fehler beim Laden des Profils:", err);
-      }
-    };
-
-    fetchUser();
-  }, [effectiveUserId, token]);
+    setFormData({
+      username: localUser.username || "",
+      desc: localUser.desc || "",
+      location: localUser.location || "",
+      from: localUser.from || "",
+      relationship: localUser.relationship || 1,
+    });
+  }, [userId, navigate, localUser]);
 
   const handleChange = (e) => {
-    setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleProfileChange = (e) => {
+    const file = e.target.files[0];
+    setProfileFile(file);
+    setProfilePreview(URL.createObjectURL(file));
+  };
+
+  const handleCoverChange = (e) => {
+    const file = e.target.files[0];
+    setCoverFile(file);
+    setCoverPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = new FormData();
+    data.append("username", formData.username);
+    data.append("desc", formData.desc);
+    data.append("location", formData.location);
+    data.append("from", formData.from);
+    data.append("relationship", formData.relationship);
+
+    if (profileFile) data.append("profilePicture", profileFile);
+    if (coverFile) data.append("coverPicture", coverFile);
+
     try {
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/users/${effectiveUserId}`,
-        userData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      alert("Profil erfolgreich aktualisiert!");
+      const res = await axiosInstance.put(`/users/${userId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      alert("Profil aktualisiert.");
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate(`/profile/${userId}`);
     } catch (err) {
-      console.error("Fehler beim Aktualisieren:", err);
-      alert("Aktualisierung fehlgeschlagen!");
+      console.error(
+        "❌ Fehler beim Update:",
+        err?.response?.data || err.message
+      );
+      alert(
+        `Update fehlgeschlagen: ${err?.response?.data?.message || err.message}`
+      );
     }
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6 text-center">
-        Profil bearbeiten
-      </h1>
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+    <div className="edit-profile-page">
+      <h2>Profil bearbeiten</h2>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <label>Username:</label>
+        <input
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Bio:</label>
+        <textarea name="desc" value={formData.desc} onChange={handleChange} />
+
+        <label>Location:</label>
+        <input
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+        />
+
+        <label>From:</label>
+        <input name="from" value={formData.from} onChange={handleChange} />
+
+        <label>Relationship:</label>
+        <select
+          name="relationship"
+          value={formData.relationship}
+          onChange={handleChange}
+        >
+          <option value={1}>Single</option>
+          <option value={2}>In a relationship</option>
+          <option value={3}>It's complicated</option>
+        </select>
+
         <div>
-          <label className="block mb-1">Name</label>
+          <label>Profilbild:</label>
           <input
-            type="text"
-            name="name"
-            value={userData.name}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
+            type="file"
+            accept="image/*"
+            ref={profileInputRef}
+            onChange={handleProfileChange}
           />
-        </div>
-        <div>
-          <label className="block mb-1">Ort</label>
-          <input
-            type="text"
-            name="location"
-            value={userData.location}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block mb-1">Herkunft</label>
-          <input
-            type="text"
-            name="origin"
-            value={userData.origin}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block mb-1">Beschreibung</label>
-          <input
-            type="text"
-            name="bio"
-            value={userData.bio}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block mb-1">Coverbild-URL</label>
-          <input
-            type="text"
-            name="coverPicture"
-            value={userData.coverPicture}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block mb-1">Profilbild-URL</label>
-          <input
-            type="text"
-            name="profilePicture"
-            value={userData.profilePicture}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
+          {profilePreview && (
+            <img src={profilePreview} alt="Preview" height="100" />
+          )}
         </div>
 
-        <div className="col-span-2 text-center mt-4">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-          >
-            Speichern
-          </button>
+        <div>
+          <label>Coverbild:</label>
+          <input
+            type="file"
+            accept="image/*"
+            ref={coverInputRef}
+            onChange={handleCoverChange}
+          />
+          {coverPreview && (
+            <img src={coverPreview} alt="Preview" height="100" />
+          )}
         </div>
+
+        <button type="submit">Speichern</button>
       </form>
     </div>
   );
 };
 
-export default ProfileEdit;
+export default EditProfile;

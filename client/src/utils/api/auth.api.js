@@ -7,7 +7,8 @@ export const loginAuth = async (userInfo, dispatch) => {
     const user = res.data.user;
 
     // Speichern der Benutzerdaten im localStorage
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
 
     dispatch({ type: "LOGIN_SUCCESS", payload: user }); // Benutzer wird hier gesetzt
   } catch (error) {

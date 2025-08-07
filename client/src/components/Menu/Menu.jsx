@@ -42,13 +42,13 @@ const Menu = () => {
         <BiHomeAlt className="text-xl" />
       </Link>
 
-      <Link
+      {/* <Link
         to="/timeline"
         className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
       >
         <span className="text-base font-medium">Timeline</span>
         <CiViewTimeline className="text-xl" />
-      </Link>
+      </Link> */}
 
       {userId && (
         <>
@@ -60,13 +60,13 @@ const Menu = () => {
             <CgProfile className="text-xl" />
           </Link>
 
-          {/* <Link
+          <Link
             to={`/profile/${userId}/edit`}
             className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
           >
             <span className="text-base font-medium">Edit Profile</span>
             <FiSettings className="text-xl" />
-          </Link> */}
+          </Link>
         </>
       )}
 

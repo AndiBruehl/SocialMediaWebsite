@@ -1,43 +1,54 @@
 import express from "express";
+import {
+  updateUserController,
+  deleteUserController,
+  getUserController,
+  getAllUsersController,
+  followUserController,
+  unfollowUserController,
+  createUserController,
+  updateProfilePic,
+  updateCoverPic,
+} from "../controllers/user.controller.js";
 
 import {
-  createUserController,
-  deleteUserController,
-  followUserController,
-  getAllUsersController,
-  getUserController,
-  unfollowUserController,
-  updateUserController,
-} from "../controllers/user.controller.js";
+  upload,
+  uploadProfilePic,
+  uploadCoverPic,
+} from "../middleware/upload.js";
 
 const router = express.Router();
 
-// Create User
+// ⬆️ Profil-Update inkl. Bilder
+router.put(
+  "/:id",
+  upload.fields([
+    { name: "profilePicture", maxCount: 1 },
+    { name: "coverPicture", maxCount: 1 },
+  ]),
+  updateUserController
+);
 
-router.post("/", createUserController);
+// 🔄 Nur Profilbild ändern
+router.put(
+  "/profile-pic/:id",
+  uploadProfilePic.single("profilePicture"),
+  updateProfilePic
+);
 
-// Update user
+// 🔄 Nur Coverbild ändern
+router.put(
+  "/cover-pic/:id",
+  uploadCoverPic.single("coverPicture"),
+  updateCoverPic
+);
 
-router.put("/:id", updateUserController);
-
-// delete user
-
+// 🔧 Benutzer verwalten
 router.delete("/:id", deleteUserController);
-
-// get a user
-
 router.get("/:id", getUserController);
-
-// get all users
-
 router.get("/", getAllUsersController);
-
-// Follow user
-
-router.put("/follow/:id", followUserController);
-
-// Unfollow user
-
-router.put("/unfollow/:id", unfollowUserController);
+router.put("/:id/follow", followUserController);
+router.put("/:id/unfollow", unfollowUserController);
+router.post("/", createUserController);
 
 export default router;

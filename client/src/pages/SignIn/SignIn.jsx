@@ -61,6 +61,14 @@ const SignIn = () => {
     }
   }, [user]);
 
+  // Save token and user when login is successful
+  useEffect(() => {
+    if (user && user.token) {
+      localStorage.setItem("token", user.token);
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
   return (
     <AuthLayout>
       <motion.div

@@ -41,15 +41,22 @@ const Profile = () => {
       {/* Cover + Profile Picture */}
       <div style={{ flex: 9, backgroundColor: "white" }}>
         <div className="relative h-[200px] bg-gray-100">
+          {/* Cover Picture */}
           {user.coverPicture?.trim() && (
             <img
-              src={user.coverPicture}
+              src={`http://localhost:9000${user.coverPicture}`}
               alt="coverImage"
               className="w-full h-[200px] object-cover"
             />
           )}
+
+          {/* Profile Picture */}
           <img
-            src={user.profilePicture?.trim() || defaultAvatar}
+            src={
+              user?.profilePicture
+                ? `http://localhost:9000${user.profilePicture}`
+                : defaultAvatar
+            }
             alt="profilePic"
             className="h-[100px] w-[100px] object-cover rounded-full absolute left-0 right-0 m-auto top-[150px] border-4 border-white shadow-md"
           />
