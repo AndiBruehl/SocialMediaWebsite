@@ -10,13 +10,9 @@ import {
 
 import User from "../models/user.model.js";
 
-// 📍 Benutzerprofil aktualisieren (inkl. Bild-Upload)
 export const updateUserController = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log("📨 PUT /users/:id aufgerufen für:", userId);
-    console.log("🧾 req.body:", req.body);
-    console.log("🖼️ empfangene Dateien:", req.files);
 
     const updateData = {
       username: req.body.username,
@@ -27,25 +23,19 @@ export const updateUserController = async (req, res) => {
       updatedAt: Date.now(),
     };
 
-    // 📷 Bilder korrekt verarbeiten und Pfade setzen
     if (req.files?.profilePicture?.[0]) {
       const profileFile = req.files.profilePicture[0];
       updateData.profilePicture = `/images/profile/${profileFile.filename}`;
-      console.log("✅ Profilbild gespeichert als:", updateData.profilePicture);
     }
 
     if (req.files?.coverPicture?.[0]) {
       const coverFile = req.files.coverPicture[0];
       updateData.coverPicture = `/images/cover/${coverFile.filename}`;
-      console.log("✅ Coverbild gespeichert als:", updateData.coverPicture);
     }
 
-    // ❌ Leere Felder entfernen
     Object.keys(updateData).forEach((key) => {
       if (updateData[key] === "") delete updateData[key];
     });
-
-    console.log("🛠️ Update-Daten für User:", updateData);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -54,68 +44,60 @@ export const updateUserController = async (req, res) => {
     );
 
     if (!updatedUser) {
-      console.warn("❌ Kein Benutzer mit ID gefunden:", userId);
       return res.status(404).json({ message: "User not found" });
     }
-
-    console.log("✅ Benutzer aktualisiert:", updatedUser);
 
     res.status(200).json({
       message: "Profil erfolgreich aktualisiert",
       user: updatedUser,
     });
   } catch (err) {
-    console.error("❌ Fehler beim Aktualisieren:", err);
-    if (err.code === 11000 && err.keyPattern?.username) {
-      return res
-        .status(400)
-        .json({ message: "Der Benutzername ist bereits vergeben." });
-    }
-    res.status(500).json({ message: "Serverfehler beim Aktualisieren" });
+    console.error("Update-Fehler:", err);
+    res.status(500).json({ message: "Fehler beim Update" });
   }
 };
 
-// ✅ Nur Profilbild aktualisieren
 export const updateProfilePic = async (req, res) => {
   try {
     const userId = req.params.id;
-    const filePath = `/images/profile/${req.file.filename}`;
+    const filename = req.file.filename;
+    const newPath = `/images/profile/${filename}`;
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $set: { profilePicture: filePath, updatedAt: Date.now() } },
+      { profilePicture: newPath },
       { new: true }
     );
 
     res.status(200).json({
-      message: "Profilbild erfolgreich aktualisiert",
+      message: "Profile picture updated",
+      path: newPath,
       user: updatedUser,
     });
   } catch (error) {
-    console.error("Fehler beim Aktualisieren des Profilbilds:", error);
-    res.status(500).json({ message: "Fehler beim Upload", error });
+    res.status(500).json({ message: "Error updating profile picture", error });
   }
 };
 
-// ✅ Nur Coverbild aktualisieren
 export const updateCoverPic = async (req, res) => {
   try {
     const userId = req.params.id;
-    const filePath = `/images/cover/${req.file.filename}`;
+    const filename = req.file.filename;
+    const newPath = `/images/cover/${filename}`;
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $set: { coverPicture: filePath, updatedAt: Date.now() } },
+      { coverPicture: newPath },
       { new: true }
     );
 
     res.status(200).json({
-      message: "Coverbild erfolgreich aktualisiert",
+      message: "Cover picture updated",
+      path: newPath,
       user: updatedUser,
     });
   } catch (error) {
-    console.error("Fehler beim Aktualisieren des Coverbilds:", error);
-    res.status(500).json({ message: "Fehler beim Upload", error });
+    res.status(500).json({ message: "Error updating cover picture", error });
   }
 };
 

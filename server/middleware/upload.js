@@ -1,9 +1,9 @@
+// middleware/upload.js
 import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 
-// Zielverzeichnis sicherstellen
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -25,31 +25,32 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
-    const uniqueName = `${uuidv4()}${ext}`;
-    cb(null, uniqueName);
+
+    // Aktuelles Benutzerobjekt muss mitgegeben werden
+    let baseDir = "";
+    let oldFile = "";
+
+    if (file.fieldname === "profilePicture") {
+      baseDir = "public/images/profile";
+      oldFile = req.currentUser?.profilePicture?.split("/").pop();
+    } else if (file.fieldname === "coverPicture") {
+      baseDir = "public/images/cover";
+      oldFile = req.currentUser?.coverPicture?.split("/").pop();
+    }
+
+    // Alte Datei löschen (wenn vorhanden)
+    if (oldFile) {
+      const oldPath = path.join(baseDir, oldFile);
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+      }
+    }
+
+    const filename = `${uuidv4()}${ext}`;
+    cb(null, filename);
   },
 });
 
 export const upload = multer({ storage });
-
-export const uploadProfilePic = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, "public/images/profile"),
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      const uniqueName = `${uuidv4()}${ext}`;
-      cb(null, uniqueName);
-    },
-  }),
-});
-
-export const uploadCoverPic = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, "public/images/cover"),
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      const uniqueName = `${uuidv4()}${ext}`;
-      cb(null, uniqueName);
-    },
-  }),
-});
+export const uploadProfilePic = multer({ storage });
+export const uploadCoverPic = multer({ storage });

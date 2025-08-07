@@ -46,6 +46,10 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  from: {
+    type: String,
+    default: "",
+  },
   relationship: {
     type: Number,
     enum: [1, 2, 3], // 1: Single, 2: In a relationship, 3: It's complicated

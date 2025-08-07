@@ -1,3 +1,4 @@
+// routes/user.routes.js
 import express from "express";
 import {
   updateUserController,
@@ -17,9 +18,25 @@ import {
   uploadCoverPic,
 } from "../middleware/upload.js";
 
+import User from "../models/user.model.js";
+
 const router = express.Router();
 
-// ⬆️ Profil-Update inkl. Bilder
+// 🔁 Vorab aktuellen User laden, damit Multer Zugriff hat
+router.param("id", async (req, res, next, id) => {
+  try {
+    const currentUser = await User.findById(id);
+    if (!currentUser)
+      return res.status(404).json({ message: "User not found" });
+    req.currentUser = currentUser;
+    next();
+  } catch (err) {
+    console.error("User laden fehlgeschlagen:", err);
+    res.status(500).json({ message: "Serverfehler" });
+  }
+});
+
+// 🔄 Beide Bilder gleichzeitig updaten
 router.put(
   "/:id",
   upload.fields([
@@ -29,21 +46,20 @@ router.put(
   updateUserController
 );
 
-// 🔄 Nur Profilbild ändern
+// Nur Profilbild
 router.put(
   "/profile-pic/:id",
   uploadProfilePic.single("profilePicture"),
   updateProfilePic
 );
 
-// 🔄 Nur Coverbild ändern
+// Nur Coverbild
 router.put(
   "/cover-pic/:id",
   uploadCoverPic.single("coverPicture"),
   updateCoverPic
 );
 
-// 🔧 Benutzer verwalten
 router.delete("/:id", deleteUserController);
 router.get("/:id", getUserController);
 router.get("/", getAllUsersController);
