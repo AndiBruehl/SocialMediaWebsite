@@ -52,7 +52,7 @@ const userSchema = new Schema({
   },
   relationship: {
     type: Number,
-    enum: [1, 2, 3], // 1: Single, 2: In a relationship, 3: It's complicated
+    enum: [1, 2, 3, 4], // 1: Single, 2: In a relationship, 3: Married, 4: It's complicated
     default: 1,
   },
   followers: {

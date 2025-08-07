@@ -1,44 +1,120 @@
-.profile-edit {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: #fff;
+.edit-profile-page {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.card {
+  width: min(100%, 980px);
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #1f2937;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.title {
+  margin: 0 0 18px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.form-section {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  font-size: 0.92rem;
+  color: #9ca3af;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid #374151;
+  background: #0b1220;
+  color: #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #2563eb;
+}
+
+.row-2 {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.image-field .image-picker {
+  border: 1px dashed #374151;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  background: #0b1220;
 }
 
-.profile-edit h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
+.preview {
+  display: grid;
+  gap: 10px;
+  align-items: start;
 }
 
-.profile-edit label {
-  display: block;
-  margin-top: 1rem;
-}
-
-.profile-edit input,
-.profile-edit textarea {
+.preview img {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.3rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
 }
 
-.profile-edit button {
-  margin-top: 1.5rem;
-  padding: 0.7rem;
-  width: 100%;
-  background-color: #1e90ff;
-  color: white;
-  border: none;
-  border-radius: 8px;
+.hint {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin: 6px 0 0;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-primary,
+.btn-secondary {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 14px;
   cursor: pointer;
+  font-weight: 600;
 }
 
-.message {
-  margin-top: 1rem;
-  text-align: center;
-  font-weight: bold;
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #e5e7eb;
+  border-color: #374151;
 }

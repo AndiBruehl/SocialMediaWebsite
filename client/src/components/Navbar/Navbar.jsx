@@ -33,14 +33,14 @@ const Navbar = () => {
           <Logo />
         </div>
 
-        <div className="navbar-center">
+        {/* <div className="navbar-center">
           <SearchBar
             onSearch={(value) => console.log("Search triggered:", value)}
           />
-        </div>
+        </div> */}
 
         <div className="navbar-right gap-2">
-          <div className="relative">
+          {/* <div className="relative">
             <Link to="/messages">
               <BiMessageDetail className="icon-size" />
               <span className="notification-badge">1</span>
@@ -51,7 +51,7 @@ const Navbar = () => {
               <BiBell className="icon-size" />
               <span className="notification-badge">2</span>
             </Link>
-          </div>
+          </div> */}
           {isOpen ? (
             <BiX
               className="menu-icon icon-size"

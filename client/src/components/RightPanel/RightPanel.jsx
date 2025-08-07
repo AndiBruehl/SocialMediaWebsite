@@ -51,7 +51,7 @@ export const RightPanelProfile = ({ user }) => {
     1: "Single",
     2: "In a relationship",
     3: "Married",
-    4: "No comment",
+    4: "It's complicated",
   };
 
   return (
