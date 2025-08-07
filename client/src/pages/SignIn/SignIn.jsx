@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import logo from "../../../public/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowRightToBracket, FaQuestion } from "react-icons/fa6";
 import AuthLayout from "../../layout/AuthLayout";
 import { AuthContext } from "../../context/AuthContext";
 import { loginAuth } from "../../utils/api/auth.api";
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.body.classList.add("auth-page");
     return () => {
@@ -51,7 +54,12 @@ const SignIn = () => {
     }
   };
 
-  console.log(user);
+  // ✅ Weiterleitung nach erfolgreichem Login
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
 
   return (
     <AuthLayout>
@@ -61,7 +69,6 @@ const SignIn = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Logo */}
         <motion.img
           src={logo}
           alt="logo"
@@ -71,104 +78,55 @@ const SignIn = () => {
           transition={{ delay: 0.3, duration: 0.5 }}
         />
 
-        {/* Titel */}
-        <motion.h1
-          className="text-5xl italic font-light font-serif tracking-wider mb-6"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          VelvetVibe Social
-        </motion.h1>
+        <motion.h1 className="text-3xl font-semibold mb-6">Sign In</motion.h1>
 
-        {/* Formular-Box */}
-        <motion.div
-          className="w-[75%] mb-20 shadow-lg rounded-md bg-slate-50"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-        >
-          <div className="p-[10px] m-[5%]">
-            <div className="flex flex-col items-center justify-between m-[5%]">
-              <div className="text-center">
-                <h1 className="font-extrabold text-2xl">Welcome back!</h1>
-                <br />
-                <span>Great to see you again!</span>
-              </div>
-              <br />
-
-              <form onSubmit={handleLogin}>
-                <div className="flex flex-col gap-3 mb-6">
-                  {/* E-Mail Eingabefeld */}
-                  <input
-                    type="text"
-                    placeholder="Email"
-                    className={`border px-3 py-2 rounded ${
-                      errors.email ? "border-red-500" : ""
-                    }`}
-                    value={auth.email}
-                    onChange={(e) =>
-                      setAuth((prev) => ({ ...prev, email: e.target.value }))
-                    }
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm">{errors.email}</p>
-                  )}
-
-                  {/* Passwort Eingabefeld */}
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    className={`border px-3 py-2 rounded ${
-                      errors.password ? "border-red-500" : ""
-                    }`}
-                    value={auth.password}
-                    onChange={(e) =>
-                      setAuth((prev) => ({
-                        ...prev,
-                        password: e.target.value,
-                      }))
-                    }
-                  />
-                  {errors.password && (
-                    <p className="text-red-500 text-sm">{errors.password}</p>
-                  )}
-                </div>
-
-                <br />
-
-                <Link
-                  to="/signup"
-                  className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
-                >
-                  <span className="text-sm">Reset Password</span>
-                  <FaQuestion className="text-xl" />
-                </Link>
-
-                <br />
-
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    className="cursor-pointer bg-blue-500 font-bold text-white px-4 py-2 rounded hover:bg-blue-600"
-                  >
-                    {isFetching ? "Joining..." : "Join!"}
-                  </button>
-                </div>
-
-                <br />
-
-                <Link
-                  to="/signup"
-                  className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
-                >
-                  <span className="text-sm">Not registered yet?</span>
-                  <FaArrowRightToBracket className="text-xl" />
-                </Link>
-              </form>
-            </div>
+        <form className="w-full max-w-sm" onSubmit={handleLogin}>
+          <div className="mb-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={auth.email}
+              onChange={(e) => setAuth({ ...auth, email: e.target.value })}
+              className="w-full px-3 py-2 border rounded"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
-        </motion.div>
+          <div className="mb-6">
+            <input
+              type="password"
+              placeholder="Password"
+              value={auth.password}
+              onChange={(e) => setAuth({ ...auth, password: e.target.value })}
+              className="w-full px-3 py-2 border rounded"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isFetching}
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          >
+            {isFetching ? "Signing in..." : "Sign In"}
+          </button>
+
+          {error && (
+            <p className="text-red-600 text-sm mt-3">
+              Login failed. Try again.
+            </p>
+          )}
+        </form>
+
+        <p className="mt-4 text-sm">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-blue-500 hover:underline">
+            Sign Up
+          </Link>
+        </p>
       </motion.div>
     </AuthLayout>
   );

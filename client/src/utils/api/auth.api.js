@@ -14,3 +14,12 @@ export const loginAuth = async (userInfo, dispatch) => {
     dispatch({ type: "LOGIN_FAILURE", payload: error });
   }
 };
+
+export const signupAuth = async (userInfo) => {
+  try {
+    const res = await axiosInstance.post("/auth/register", userInfo);
+    return res.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Registration failed";
+  }
+};

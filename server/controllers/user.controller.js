@@ -28,7 +28,7 @@ export const updateUserController = async (req, res) => {
         message: "User updated successfully",
       });
     } catch (error) {
-      console.error("Error updating user:", error.message);
+      console.error("❌ Fehler im updateUserController:", error);
       res.status(500).json({ message: "Server error", error: error.message });
     }
   } else {

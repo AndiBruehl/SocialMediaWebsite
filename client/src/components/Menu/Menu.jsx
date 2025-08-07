@@ -1,18 +1,36 @@
 import { BiHomeAlt } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { CiViewTimeline } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { FiLogOut, FiSettings } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Menu = () => {
-  // Fallback für Testzwecke
-  // const testUserId = "685edfa69d8de17c6b7a0b07";
+  const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
 
-  // Versuche User-ID aus localStorage zu holen
-  // const storedUserId = localStorage.getItem("userId");
+  useEffect(() => {
+    try {
+      const parsed = JSON.parse(localStorage.getItem("user"));
+      const storedUser = parsed?.user;
+      if (storedUser && storedUser._id) {
+        setUserId(storedUser._id);
+        console.log("User ID from localStorage:", storedUser._id);
+      } else {
+        console.warn("User ID not found in localStorage.");
+      }
+    } catch (err) {
+      console.warn("Could not parse user from localStorage:", err);
+    }
+  }, []);
 
-  // Nimm storedUserId, wenn vorhanden & gültig, sonst fallback
-  // const userId =
-  //   storedUserId && storedUserId.length === 24 ? storedUserId : testUserId;
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    dispatch({ type: "LOGOUT" });
+    navigate("/signin");
+  };
 
   return (
     <div className="fixed top-[0px] right-[1vw] w-[225px] bg-slate-300 rounded-[8px] shadow-lg transform transition-transform duration-500 ease-in-out z-[999] p-5 flex flex-col gap-y-4 text-right">
@@ -24,14 +42,6 @@ const Menu = () => {
         <BiHomeAlt className="text-xl" />
       </Link>
 
-      {/* <Link
-        to={`/profile/${userId}/edit`}
-        className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
-      >
-        <span className="text-base font-medium">Edit Profile</span>
-        <CgProfile className="text-xl" />
-      </Link> */}
-
       <Link
         to="/timeline"
         className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
@@ -39,6 +49,34 @@ const Menu = () => {
         <span className="text-base font-medium">Timeline</span>
         <CiViewTimeline className="text-xl" />
       </Link>
+
+      {userId && (
+        <>
+          <Link
+            to={`/profile/${userId}`}
+            className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+          >
+            <span className="text-base font-medium">My Profile</span>
+            <CgProfile className="text-xl" />
+          </Link>
+
+          {/* <Link
+            to={`/profile/${userId}/edit`}
+            className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
+          >
+            <span className="text-base font-medium">Edit Profile</span>
+            <FiSettings className="text-xl" />
+          </Link> */}
+        </>
+      )}
+
+      <button
+        onClick={handleLogout}
+        className="flex items-center justify-end gap-3 text-gray-800 hover:text-red-600 transition-colors"
+      >
+        <span className="text-base font-medium">Logout</span>
+        <FiLogOut className="text-xl" />
+      </button>
     </div>
   );
 };
