@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useContext, useMemo } from "react";
+import React, { useEffect, useState, useContext, useMemo, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import { MdOutlineMoreVert } from "react-icons/md";
-import { FcLike } from "react-icons/fc";
 import { BiSolidLike } from "react-icons/bi";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
@@ -31,6 +30,12 @@ const Post = ({ post }) => {
   );
   const [working, setWorking] = useState(false);
 
+  // menu / edit state
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editDesc, setEditDesc] = useState(post.desc || "");
+  const menuRef = useRef(null);
+
   useEffect(() => {
     const getUserInfo = async () => {
       if (!post.userId) return;
@@ -44,27 +49,74 @@ const Post = ({ post }) => {
     getUserInfo();
   }, [post.userId]);
 
-  const isLikedByMe = me?._id ? likes.includes(me._id) : false;
+  const isLikedByMe = useMemo(() => {
+    return me?._id ? likes.map(String).includes(String(me._id)) : false;
+  }, [likes, me?._id]);
 
   const handleLike = async () => {
     if (!me?._id || working) return;
     setWorking(true);
     try {
-      await axiosInstance.put(`/posts/like/${post._id}`, { userId: me._id });
-      setLikes((prev) =>
-        prev.includes(me._id)
-          ? prev.filter((id) => id !== me._id)
-          : [...prev, me._id]
-      );
+      const res = await axiosInstance.put(`/post/like/${post._id}`, {
+        userId: me._id,
+      });
+      if (Array.isArray(res.data.likes)) setLikes(res.data.likes);
     } catch (e) {
-      console.error("Like failed:", e?.response?.data || e.message);
+      console.error("Like fehlgeschlagen:", e?.response?.data || e.message);
     } finally {
       setWorking(false);
     }
   };
 
+  // click outside for menu
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
+
+  const canEdit = String(me?._id) === String(post.userId) || me?.isAdmin;
+
+  const handleSaveEdit = async () => {
+    if (!canEdit) return;
+    try {
+      await axiosInstance.put(`/post/update/${post._id}`, {
+        userId: me._id,
+        desc: editDesc,
+      });
+      setEditing(false);
+      setMenuOpen(false);
+      // weiche Aktualisierung:
+      post.desc = editDesc;
+    } catch (e) {
+      console.error(
+        "Post-Update fehlgeschlagen:",
+        e?.response?.data || e.message
+      );
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!canEdit) return;
+    if (!confirm("Diesen Post wirklich löschen?")) return;
+    try {
+      await axiosInstance.delete(`/post/delete/${post._id}`);
+      // simple Lösung: Seite neu laden, oder du entfernst das Item aus dem Feed-State
+      window.location.reload();
+    } catch (e) {
+      console.error(
+        "Post löschen fehlgeschlagen:",
+        e?.response?.data || e.message
+      );
+    }
+  };
+
   const avatar = resolveUrl(user?.profilePicture) || avatarFallback;
-  const postImg = resolveUrl(post?.img); // ✅ Cloudinary/absolute or legacy local
+  const postImg = resolveUrl(post?.img);
 
   return (
     <div className="w-[97%] mb-20 shadow-lg rounded-md bg-slate-50">
@@ -80,6 +132,8 @@ const Post = ({ post }) => {
                 src={avatar}
                 alt="profilePic"
                 className="w-[25px] h-[25px] rounded-full m-2 object-cover"
+                onContextMenu={(e) => e.preventDefault()}
+                draggable="false"
               />
               {user.username && (
                 <span className="font-bold mr-2.5">{user.username}</span>
@@ -93,42 +147,102 @@ const Post = ({ post }) => {
                 : ""}
             </span>
           </div>
-          <MdOutlineMoreVert className="text-xl cursor-pointer" />
+
+          <div className="relative" ref={menuRef}>
+            <button
+              className="text-xl p-1 rounded hover:bg-gray-100"
+              onClick={() => setMenuOpen((o) => !o)}
+              title="Optionen"
+            >
+              <MdOutlineMoreVert />
+            </button>
+
+            {menuOpen && canEdit && (
+              <div className="absolute right-0 mt-2 bg-white border rounded shadow-md z-10 w-44">
+                <button
+                  className="w-full text-left px-3 py-2 hover:bg-gray-50"
+                  onClick={() => {
+                    setEditing(true);
+                    setMenuOpen(false);
+                  }}
+                >
+                  Post bearbeiten
+                </button>
+                <button
+                  className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600"
+                  onClick={handleDelete}
+                >
+                  Post löschen
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* Inhalt */}
       <div className="mt-[20px] mb-[20px]">
-        {post?.desc && <span className="p-5 block">{post.desc}</span>}
-
-        {postImg && (
-          <div>
-            <img
-              src={postImg}
-              alt="post"
-              className="mt-[10px] mb-[10px] w-full p-5 object-contain"
-              style={{ maxHeight: "500px" }}
-              loading="lazy"
+        {!editing ? (
+          <>
+            {post?.desc && <span className="p-5 block">{post.desc}</span>}
+            {postImg && (
+              <div>
+                <img
+                  src={postImg}
+                  alt="post"
+                  className="mt-[10px] mb-[10px] w-full p-5 object-contain"
+                  style={{ maxHeight: "500px" }}
+                  loading="lazy"
+                  onContextMenu={(e) => e.preventDefault()}
+                  draggable="false"
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="p-4">
+            <textarea
+              value={editDesc}
+              onChange={(e) => setEditDesc(e.target.value)}
+              className="w-full border rounded p-2"
+              rows={4}
             />
+            <div className="mt-2 flex gap-2">
+              <button
+                onClick={handleSaveEdit}
+                className="px-3 py-1 rounded bg-blue-600 text-white"
+              >
+                Speichern
+              </button>
+              <button
+                onClick={() => setEditing(false)}
+                className="px-3 py-1 rounded border"
+              >
+                Abbrechen
+              </button>
+            </div>
           </div>
         )}
       </div>
 
+      {/* Footer */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[5px] ml-[5%] mb-[2%] ">
-          <FcLike className="cursor-pointer" onClick={handleLike} />
           <BiSolidLike
             className={`cursor-pointer ${isLikedByMe ? "text-blue-600" : ""}`}
             onClick={handleLike}
+            title={isLikedByMe ? "Unlike" : "Like"}
           />
           <span className="text-sm">{likes.length} like/s</span>
         </div>
+
         <div className="flex items-center gap-[5px] mr-[5%] mb-[2%]">
-          <span className="text-sm cursor-pointer border-b-black border-b-[1px]">
-            {Array.isArray(post.comments)
-              ? post.comments.length
-              : post.comment || 0}{" "}
-            comments
-          </span>
+          <Link
+            to={`/post/${post._id}`}
+            className="text-sm border-b-black border-b-[1px] hover:opacity-80"
+          >
+            {Array.isArray(post.comments) ? post.comments.length : 0} comments
+          </Link>
         </div>
       </div>
     </div>

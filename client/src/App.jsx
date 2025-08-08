@@ -56,6 +56,14 @@ function App() {
                 <Pages.ProfileEdit />
               </ProtectedRoute>
             }
+          />{" "}
+          <Route
+            path="/post/:postId"
+            element={
+              <ProtectedRoute>
+                <Pages.PostDetail />
+              </ProtectedRoute>
+            }
           />
         </Route>
 

@@ -5,6 +5,7 @@ import Menu from "../Menu/Menu";
 import SearchBar from "../Searchbar/Searchbar.jsx";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
+import Notification from "../Notification/Notification.jsx";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,18 +41,19 @@ const Navbar = () => {
         </div> */}
 
         <div className="navbar-right gap-2">
-          {/* <div className="relative">
+          <div className="relative">
             <Link to="/messages">
               <BiMessageDetail className="icon-size" />
               <span className="notification-badge">1</span>
             </Link>
           </div>
           <div className="relative">
-            <Link to="/notifications">
+            {/* <Link to="/notifications">
               <BiBell className="icon-size" />
               <span className="notification-badge">2</span>
-            </Link>
-          </div> */}
+            </Link> */}
+            <Notification />
+          </div>
           {isOpen ? (
             <BiX
               className="menu-icon icon-size"
