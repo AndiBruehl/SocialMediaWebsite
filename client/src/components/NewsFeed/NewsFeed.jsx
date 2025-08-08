@@ -1,19 +1,19 @@
+// src/components/NewsFeed/NewsFeed.jsx
 import React, { useEffect, useState } from "react";
 import CreatePost from "../CreatePost/CreatePost";
 import Post from "../Post/Post.jsx";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const NewsFeed = () => {
   const [posts, setPosts] = useState([]);
-  const { userId } = useParams(); // Wenn gesetzt → Profilseite
+  const { userId } = useParams();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const endpoint = userId
-          ? `/post/user/${userId}` // nur die Posts des Users
-          : `/post/all`; // alle Posts für Startseite
+        const endpoint = userId ? `/post/user/${userId}` : `/post/all`;
 
         const res = await axiosInstance.get(endpoint);
         const postData = res.data.posts || res.data.timelinePosts || [];
@@ -31,6 +31,24 @@ const NewsFeed = () => {
     fetchPosts();
   }, [userId]);
 
+  // Post löschen
+  const handleDeleted = (postId) => {
+    setPosts((prev) => prev.filter((p) => p._id !== postId));
+    toast.success("Post erfolgreich gelöscht ✅", {
+      onClose: () => window.location.reload(),
+    });
+  };
+
+  // Post nach Bearbeitung updaten
+  const handleUpdated = (updatedPost) => {
+    setPosts((prev) =>
+      prev.map((p) => (p._id === updatedPost._id ? updatedPost : p))
+    );
+    toast.success("Post erfolgreich aktualisiert ✏️", {
+      onClose: () => window.location.reload(),
+    });
+  };
+
   return (
     <div
       style={{
@@ -43,14 +61,20 @@ const NewsFeed = () => {
       className="bg-slate-200"
     >
       <br />
-      {/* Post erstellen nur, wenn kein Profil aufgerufen */}
       {!userId && <CreatePost />}
       <br />
       <hr />
       {posts.length > 0 ? (
         posts
           .filter((post) => post && post._id && post.userId)
-          .map((post) => <Post key={post._id} post={post} />)
+          .map((post) => (
+            <Post
+              key={post._id}
+              post={post}
+              onDeleted={handleDeleted}
+              onUpdated={handleUpdated}
+            />
+          ))
       ) : (
         <p className="mt-6 text-gray-500">Keine Posts gefunden.</p>
       )}

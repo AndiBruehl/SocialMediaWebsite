@@ -1,4 +1,3 @@
-// models/conversation.model.js
 import mongoose from "mongoose";
 
 const conversationSchema = new mongoose.Schema(
@@ -7,10 +6,9 @@ const conversationSchema = new mongoose.Schema(
     participants: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
     ],
-    name: { type: String }, // for groups
-    admin: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // group owner
+    name: { type: String },
+    admin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     lastMessage: {
-      // denormalized for list previews
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
       default: null,
@@ -19,6 +17,8 @@ const conversationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Ein 1:1-Conversation ist uniquely identified by Teilnehmer-Kombination.
+// (Für echte Uniqueness bräuchte man ein sortiertes participants-Feld + index)
 conversationSchema.index({ updatedAt: -1 });
 
 export default mongoose.model("Conversation", conversationSchema);

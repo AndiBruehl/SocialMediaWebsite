@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import http from "http";
 import dotenv from "dotenv";
@@ -14,21 +13,16 @@ dotenv.config();
 
 const app = express();
 
-// --- core middleware
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const PORT = process.env.PORT || 9000;
+
+// core middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(helmet());
 app.use(morgan("common"));
+app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 
-// --- CORS
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN,
-    credentials: true,
-  })
-);
-
-// --- static images w/ relaxed CORP for <img> tags
+// static images (if you need them for avatars, etc.)
 app.use(
   "/images",
   express.static(path.join(process.cwd(), "./public/images"), {
@@ -39,17 +33,17 @@ app.use(
   })
 );
 
-// --- API routes
+// API routes — IMPORTANT: these should mount all subrouters under /api/v1
 app.use(routes);
 
-// --- start HTTP + Socket.IO
-const PORT = process.env.PORT || 9000;
+// HTTP + Socket.IO
 const server = http.createServer(app);
+const io = initSocket(server, CLIENT_ORIGIN);
 
-// IMPORTANT: init socket AFTER creating http server
-initSocket(server, CLIENT_ORIGIN);
+// make io available in controllers
+app.set("io", io);
 
-// connect DB then listen
+// start
 (async () => {
   await dbConnect();
   server.listen(PORT, () => console.log(`Server listening on ${PORT}`));

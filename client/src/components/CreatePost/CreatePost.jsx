@@ -1,9 +1,11 @@
+// client/src/components/CreatePost/CreatePost.jsx
 import React, { useContext, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import defaultAvatar from "../../assets/avatar.webp";
 import { MdPermMedia, MdLocationPin } from "react-icons/md";
 import axiosInstance from "../../utils/api/axiosInstance";
+import { toast } from "react-toastify";
 
 const API_BASE = "http://localhost:9000";
 const isAbs = (s) => /^https?:\/\//i.test(s || "");
@@ -14,6 +16,7 @@ const uploadToCloudinary = async (file) => {
   fd.append("file", file);
   fd.append("upload_preset", import.meta.env.VITE_CLOUDINARY_POST_PRESET);
   const cloud = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
   const res = await fetch(
     `https://api.cloudinary.com/v1_1/${cloud}/image/upload`,
     {
@@ -48,8 +51,14 @@ export default function CreatePost() {
   const avatar = resolveUrl(user?.profilePicture) || defaultAvatar;
 
   const handleSubmit = async () => {
-    if (!user?._id) return;
-    if (!desc.trim() && !file) return;
+    if (!user?._id) {
+      toast.error("Du bist nicht eingeloggt.");
+      return;
+    }
+    if (!desc.trim() && !file) {
+      toast.info("Schreib etwas oder wähle ein Bild aus.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -60,16 +69,26 @@ export default function CreatePost() {
         userId: user._id,
         desc: desc.trim(),
         img: imgUrl,
-        location: location.trim(), // ✅ mitgeben
+        location: location.trim(),
       });
 
+      // Felder zurücksetzen
       setDesc("");
       setFile(null);
       setLocation("");
       setShowLocation(false);
-      // optional: toast + Feed refresh via Callback/Context
+
+      // ✅ Erfolg-Toast + Auto-Reload nach Ablauf
+      toast.success("Post erfolgreich erstellt!", {
+        autoClose: 1800,
+        onClose: () => window.location.reload(),
+      });
     } catch (e) {
       console.error("Post create failed:", e?.response?.data || e.message);
+      toast.error(
+        e?.response?.data?.message ||
+          "Erstellen fehlgeschlagen. Versuch’s nochmal."
+      );
     } finally {
       setLoading(false);
     }

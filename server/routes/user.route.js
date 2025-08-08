@@ -13,7 +13,6 @@ import fs from "fs";
 
 const router = express.Router();
 
-// 📂 Upload-Ordner sicherstellen
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -21,7 +20,6 @@ const ensureDir = (dir) => {
 };
 ensureDir("uploads/tmp");
 
-// 📸 Multer: temporär speichern, bevor Cloudinary übernimmt
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/tmp");
@@ -33,11 +31,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ⚠️ Reihenfolge: erst "/" dann "/:id"
+// === LIST ALL USERS (needed by Messages page)
 router.get("/", getAllUsersController);
+
+// === GET ONE
 router.get("/:id", getUserController);
 
-// Update (Profil & Cover möglich)
+// === UPDATE (profile + cover)
 router.put(
   "/:id",
   verifyToken,
@@ -48,7 +48,7 @@ router.put(
   updateUserController
 );
 
-// Delete
+// === DELETE
 router.delete("/:id", verifyToken, deleteUserController);
 
 export default router;

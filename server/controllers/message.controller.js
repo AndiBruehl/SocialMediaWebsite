@@ -1,4 +1,3 @@
-// server/controllers/message.controller.js
 import * as MessageService from "../services/message.service.js";
 
 export async function sendMessage(req, res) {
@@ -46,7 +45,8 @@ export async function getUnreadMessages(req, res) {
 export async function markAsRead(req, res) {
   try {
     const { messageId } = req.params;
-    const updated = await MessageService.markAsRead(messageId);
+    const { userId } = req.body; // pass current user id
+    const updated = await MessageService.markAsRead(messageId, userId);
     res.json(updated);
   } catch (err) {
     res
@@ -58,7 +58,8 @@ export async function markAsRead(req, res) {
 export async function markAsUnread(req, res) {
   try {
     const { messageId } = req.params;
-    const updated = await MessageService.markAsUnread(messageId);
+    const { userId } = req.body; // pass current user id
+    const updated = await MessageService.markAsUnread(messageId, userId);
     res.json(updated);
   } catch (err) {
     res.status(500).json({

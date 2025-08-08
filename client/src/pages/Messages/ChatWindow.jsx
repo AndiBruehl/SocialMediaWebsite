@@ -1,91 +1,116 @@
 import { useEffect, useRef, useState } from "react";
-import axiosInstance from "../../utils/api/axiosInstance";
+import { BiSend } from "react-icons/bi";
 
-export default function ChatWindow({ me, conversation }) {
-  const [msgs, setMsgs] = useState([]);
-  const [text, setText] = useState("");
-  const bottomRef = useRef(null);
+export default function ChatWindow({
+  title,
+  avatar,
+  messages,
+  meId,
+  onSend,
+  sending,
+}) {
+  const [input, setInput] = useState("");
+  const messagesContainerRef = useRef(null);
 
-  // Nachrichten laden
+  // Scroll to top when new messages are added
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/messages/conversation/${conversation._id}`
-        );
-        // falls dein GET anders ist: anpassen. Du hast z.B. getConversation(user1,user2).
-        // BESSER: ergänze einen GET /messages/by-conversation/:conversationId
-        setMsgs(res.data || []);
-      } catch (e) {
-        console.error("load messages failed:", e);
-      }
-    };
-    if (conversation?._id) load();
-  }, [conversation?._id]);
+    messagesContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [messages?.length]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs.length]);
-
-  const send = async (e) => {
-    e?.preventDefault?.();
-    const t = text.trim();
-    if (!t) return;
-    try {
-      const res = await axiosInstance.post(`/messages/send`, {
-        conversationId: conversation._id,
-        sender: me._id,
-        text: t,
-      });
-      setMsgs((prev) => [...prev, res.data]);
-      setText("");
-    } catch (e) {
-      console.error("send failed:", e);
-    }
+  const handleSendClick = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    const text = input.trim();
+    if (!text) return;
+    onSend?.(text);
+    setInput("");
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-3 border-b font-semibold">
-        {conversation.isGroup
-          ? conversation.name || "Gruppe"
-          : (conversation.participants || [])
-              .filter((u) => String(u._id) !== String(me._id))
-              .map((u) => u.username)
-              .join(", ") || "Chat"}
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        {msgs.map((m) => {
-          const mine = String(m.sender?._id || m.sender) === String(me._id);
-          return (
-            <div
-              key={m._id}
-              className={`max-w-[70%] rounded px-3 py-2 ${
-                mine ? "ml-auto bg-blue-600 text-white" : "mr-auto bg-gray-100"
-              }`}
-            >
-              {m.text}
-            </div>
-          );
-        })}
-        <div ref={bottomRef} />
-      </div>
-
-      <form onSubmit={send} className="p-3 border-t flex gap-2">
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="flex-1 border rounded px-3 py-2"
-          placeholder="Nachricht schreiben…"
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex items-center gap-3 p-4 border-b bg-white">
+        <img
+          src={avatar || "/default-avatar.png"}
+          alt=""
+          className="w-9 h-9 rounded-full object-cover"
+          onContextMenu={(e) => e.preventDefault()}
+          draggable="false"
         />
-        <button
-          type="submit"
-          className="px-4 py-2 rounded bg-blue-600 text-white"
-        >
-          Senden
-        </button>
-      </form>
+        <div className="font-semibold">{title}</div>
+      </div>
+      {/* Messages */}
+      <div
+        className="overflow-y-auto p-4 space-y-2 bg-white max-h-[65vh]"
+        ref={messagesContainerRef}
+      >
+        {!messages || messages.length === 0 ? (
+          <div className="text-sm text-gray-500">Noch keine Nachrichten.</div>
+        ) : (
+          [...messages]
+            .reverse() // Reverse messages to show newest at top
+            .map((m, idx) => {
+              const myMsg = String(m.sender?._id || m.sender) === String(meId);
+              // unique key: prefer _id, else createdAt+idx
+              const key = m._id || `${m.createdAt || "ts"}-${idx}`;
+              // Format timestamp (assuming createdAt is a valid date string)
+              const timestamp = m.createdAt
+                ? new Date(m.createdAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : "Unbekannt";
+              return (
+                <div
+                  key={key}
+                  className={`flex ${myMsg ? "justify-end" : "justify-start"}`}
+                >
+                  <div className="max-w-[70%]">
+                    <div
+                      className={`rounded px-3 py-2 text-sm ${
+                        myMsg
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 text-black"
+                      }`}
+                    >
+                      {m.text}
+                    </div>
+                    <div
+                      className={`text-xs text-gray-500 mt-1 ${
+                        myMsg ? "text-right" : "text-left"
+                      }`}
+                    >
+                      {timestamp}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+        )}
+      </div>
+      {/* Composer */}
+      <div className="border-t p-3 bg-gray-50">
+        <div className="flex gap-2">
+          <input
+            className="flex-1 border rounded px-3 py-2"
+            placeholder="Nachricht schreiben…"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // Prevent form submission
+                handleSendClick(e);
+              }
+            }}
+          />
+          <button
+            onClick={handleSendClick}
+            disabled={sending || !input.trim()}
+            className="px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-50 flex items-center gap-2"
+          >
+            <BiSend /> Senden
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

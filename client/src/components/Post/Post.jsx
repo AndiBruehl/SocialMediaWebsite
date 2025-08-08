@@ -1,3 +1,4 @@
+// client/src/components/Post/Post.jsx
 import React, { useEffect, useState, useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -11,7 +12,7 @@ const API_BASE = "http://localhost:9000";
 const isAbs = (s) => /^https?:\/\//i.test(s || "");
 const resolveUrl = (s) => (isAbs(s) ? s : s ? `${API_BASE}${s}` : "");
 
-const Post = ({ post }) => {
+const Post = ({ post, onDeleted, onUpdated }) => {
   const { currentUser } = useContext(AuthContext) || {};
   const lsUser = useMemo(() => {
     try {
@@ -31,27 +32,53 @@ const Post = ({ post }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [working, setWorking] = useState(false);
 
-  // Autor laden (robust: userId kann String oder Objekt sein)
+  // Edit/Delete UI
+  const [editOpen, setEditOpen] = useState(false);
+  const [editDesc, setEditDesc] = useState(post?.desc || "");
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => setEditDesc(post?.desc || ""), [post?.desc]);
+
+  // Autor laden
+  // ---- in Post.jsx: Autor laden robust machen ----
   useEffect(() => {
     const loadAuthor = async () => {
       try {
         if (!post?.userId) return;
-        // Falls bereits populated:
+
+        // Wenn schon gepopulated:
         if (typeof post.userId === "object" && post.userId.username) {
           setAuthor(post.userId);
           return;
         }
-        // sonst per ID holen
+
         const uid =
           typeof post.userId === "string" ? post.userId : post.userId._id;
+
+        // Nur wenn es wie eine Mongo ObjectId aussieht
+        const isValidOid =
+          typeof uid === "string" && /^[0-9a-fA-F]{24}$/.test(uid);
+        if (!isValidOid) {
+          // Alter Post mit kaputter ID / Demo-Daten => ruhig fallbacken
+          setAuthor(null);
+          return;
+        }
+
         const res = await axiosInstance.get(`/users/${uid}`);
         setAuthor(res.data?.userInfo || null);
-      } catch {
+      } catch (e) {
         setAuthor(null);
+        console.log(e);
       }
     };
     loadAuthor();
   }, [post?.userId]);
+
+  const isMine =
+    me?._id &&
+    post?.userId &&
+    String(me._id) ===
+      String(typeof post.userId === "string" ? post.userId : post.userId._id);
 
   const isLikedByMe = useMemo(() => {
     if (!me?._id) return false;
@@ -68,10 +95,43 @@ const Post = ({ post }) => {
       });
       if (Array.isArray(res.data?.likes)) setLikes(res.data.likes);
     } catch (e) {
-      // optional toast
       console.error("Like fehlgeschlagen:", e?.response?.data || e.message);
     } finally {
       setWorking(false);
+    }
+  };
+
+  const handleOpenEdit = () => {
+    setMenuOpen(false);
+    setEditDesc(post?.desc || "");
+    setEditOpen(true);
+  };
+
+  const handleSubmitEdit = async (e) => {
+    e?.preventDefault?.();
+    if (!isMine || !post?._id) return;
+    try {
+      const body = { userId: me._id, desc: editDesc };
+      const res = await axiosInstance.put(`/post/update/${post._id}`, body);
+      const updated = res.data?.updatedPost || post;
+      setEditOpen(false);
+      if (onUpdated) onUpdated(updated);
+    } catch (e) {
+      console.error("Update fehlgeschlagen:", e?.response?.data || e.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!isMine || !post?._id || deleting) return;
+    setDeleting(true);
+    try {
+      await axiosInstance.delete(`/post/delete/${post._id}`);
+      setMenuOpen(false);
+      if (onDeleted) onDeleted(post._id); // Parent kann Karte entfernen
+    } catch (e) {
+      console.error("Löschen fehlgeschlagen:", e?.response?.data || e.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -79,7 +139,7 @@ const Post = ({ post }) => {
   const postImg = resolveUrl(post?.img);
 
   return (
-    <div className="w-[97%] mb-6 rounded-lg bg-white shadow-md">
+    <div className="w-[97%] mb-6 rounded-lg bg-white shadow-md relative">
       {/* Header */}
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center justify-between">
@@ -124,40 +184,40 @@ const Post = ({ post }) => {
               </span>
             </div>
           </div>
-          {post?.location && (
-            <span className="text-xs text-gray-500">📍 {post.location}</span>
-          )}
 
-          <div className="relative">
-            <button
-              type="button"
-              className="p-2 rounded-full hover:bg-slate-100"
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-label="Post-Optionen"
-            >
-              <MdOutlineMoreVert className="text-xl" />
-            </button>
+          <div className="flex items-center gap-3">
+            {post?.location && (
+              <span className="text-xs text-gray-500">📍 {post.location}</span>
+            )}
 
-            {menuOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
+            {isMine && (
+              <div className="relative">
                 <button
-                  className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    // TODO: Modal zum Bearbeiten öffnen
-                  }}
+                  type="button"
+                  className="p-2 rounded-full hover:bg-slate-100"
+                  onClick={() => setMenuOpen((o) => !o)}
+                  aria-label="Post-Optionen"
                 >
-                  Post bearbeiten
+                  <MdOutlineMoreVert className="text-xl" />
                 </button>
-                <button
-                  className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm text-red-600"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    // TODO: Delete-Flow triggern
-                  }}
-                >
-                  Post löschen
-                </button>
+
+                {menuOpen && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-50">
+                    <button
+                      className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm"
+                      onClick={handleOpenEdit}
+                    >
+                      Post bearbeiten
+                    </button>
+                    <button
+                      className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm text-red-600 disabled:opacity-50"
+                      onClick={handleDelete}
+                      disabled={deleting}
+                    >
+                      {deleting ? "Lösche…" : "Post löschen"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -184,10 +244,10 @@ const Post = ({ post }) => {
           />
         </div>
       ) : (
-        <div className="h-2" /> // kleiner Spacer, damit Layout stabil bleibt
+        <div className="h-2" />
       )}
 
-      {/* Footer: Likes / Comments */}
+      {/* Footer */}
       <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button
@@ -215,6 +275,38 @@ const Post = ({ post }) => {
           {Array.isArray(post.comments) ? post.comments.length : 0} comments
         </Link>
       </div>
+
+      {/* Edit Modal */}
+      {editOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-4">
+            <h3 className="font-semibold mb-3">Post bearbeiten</h3>
+            <form onSubmit={handleSubmitEdit} className="space-y-3">
+              <textarea
+                value={editDesc}
+                onChange={(e) => setEditDesc(e.target.value)}
+                className="w-full border rounded p-2 min-h-[120px]"
+                placeholder="Was möchtest du ändern?"
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  className="px-3 py-2 rounded border"
+                  onClick={() => setEditOpen(false)}
+                >
+                  Abbrechen
+                </button>
+                <button
+                  type="submit"
+                  className="px-3 py-2 rounded bg-blue-600 text-white"
+                >
+                  Speichern
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
