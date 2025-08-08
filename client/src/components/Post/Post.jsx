@@ -124,6 +124,9 @@ const Post = ({ post }) => {
               </span>
             </div>
           </div>
+          {post?.location && (
+            <span className="text-xs text-gray-500">📍 {post.location}</span>
+          )}
 
           <div className="relative">
             <button

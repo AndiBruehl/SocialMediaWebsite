@@ -99,15 +99,14 @@ export const likeDislikePost = async (params, body) => {
 };
 
 // Add comment
-export const addCommentToPost = async ({ postId, userId, desc }) => {
+export const addCommentToPost = async ({ postId, userId, desc, img = "" }) => {
   const post = await postModel.findById(postId);
   if (!post) throw new Error("Post not found");
 
-  post.comments.unshift({ userId, desc });
+  post.comments.unshift({ userId, desc, img }); // ✅ img mit speichern
   await post.save();
   return post.comments;
 };
-
 // Delete comment
 export const deleteCommentFromPost = async ({ postId, commentId }) => {
   const post = await postModel.findById(postId);
