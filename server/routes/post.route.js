@@ -17,6 +17,8 @@ import {
   updatePostController,
 } from "../controllers/post.controller.js";
 
+import Post from "../models/post.model.js";
+
 // Create a post
 router.post("/create", createPostController);
 
@@ -59,5 +61,19 @@ router.put(
 // get posts by userId
 
 router.get("/user/:userId", getUserPostsController);
+
+// ✅ get all posts
+router.get("/all", async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .populate("userId", "username profilePicture") // optional: Userdaten mitgeben
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ posts });
+  } catch (err) {
+    console.error("Fehler beim Laden aller Posts:", err);
+    res.status(500).json({ error: "Fehler beim Laden aller Posts" });
+  }
+});
 
 export default router;

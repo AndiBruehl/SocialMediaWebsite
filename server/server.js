@@ -7,6 +7,8 @@ import path from "path";
 import routes from "./routes/routes.js";
 import { dbConnect } from "./dbConnect/dbConnect.js";
 
+import "dotenv/config";
+
 dotenv.config();
 
 const app = express();

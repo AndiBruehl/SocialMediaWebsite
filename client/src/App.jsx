@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 import Pages from "./pages";
@@ -9,6 +9,20 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { isFetching } = useContext(AuthContext);
+
+  // 🚫 Rechtsklick auf Bilder verhindern
+  useEffect(() => {
+    const handleContextMenu = (e) => {
+      if (e.target.tagName === "IMG") {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("contextmenu", handleContextMenu);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
 
   if (isFetching) return <div>Loading...</div>;
 

@@ -9,7 +9,13 @@ import {
 } from "../services/user.service.js";
 
 import User from "../models/user.model.js";
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} from "../middleware/upload.js";
+import fs from "fs";
 
+// 🔄 Profil + Cover + weitere Felder aktualisieren
 export const updateUserController = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -23,18 +29,33 @@ export const updateUserController = async (req, res) => {
       updatedAt: Date.now(),
     };
 
+    // Profilbild-Upload (falls vorhanden)
     if (req.files?.profilePicture?.[0]) {
-      const profileFile = req.files.profilePicture[0];
-      updateData.profilePicture = `/images/profile/${profileFile.filename}`;
+      const filePath = req.files.profilePicture[0].path;
+      const uploadResult = await uploadToCloudinary(filePath, "profile_pics");
+
+      updateData.profilePicture = uploadResult.secure_url;
+      updateData.profilePicturePublicId = uploadResult.public_id;
+
+      fs.unlinkSync(filePath);
     }
 
+    // Coverbild-Upload (falls vorhanden)
     if (req.files?.coverPicture?.[0]) {
-      const coverFile = req.files.coverPicture[0];
-      updateData.coverPicture = `/images/cover/${coverFile.filename}`;
+      const filePath = req.files.coverPicture[0].path;
+      const uploadResult = await uploadToCloudinary(filePath, "cover_pics");
+
+      updateData.coverPicture = uploadResult.secure_url;
+      updateData.coverPicturePublicId = uploadResult.public_id;
+
+      fs.unlinkSync(filePath);
     }
 
+    // Leere Felder entfernen
     Object.keys(updateData).forEach((key) => {
-      if (updateData[key] === "") delete updateData[key];
+      if (updateData[key] === "" || updateData[key] === undefined) {
+        delete updateData[key];
+      }
     });
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -53,51 +74,78 @@ export const updateUserController = async (req, res) => {
     });
   } catch (err) {
     console.error("Update-Fehler:", err);
-    res.status(500).json({ message: "Fehler beim Update" });
+    res.status(500).json({ message: "Fehler beim Update", error: err.message });
   }
 };
 
+// 🔄 Nur Profilbild aktualisieren
 export const updateProfilePic = async (req, res) => {
   try {
     const userId = req.params.id;
-    const filename = req.file.filename;
-    const newPath = `/images/profile/${filename}`;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file provided" });
+    }
+
+    const filePath = req.file.path;
+    const uploadResult = await uploadToCloudinary(filePath, "profile_pics");
+
+    fs.unlinkSync(filePath);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePicture: newPath },
+      {
+        profilePicture: uploadResult.secure_url,
+        profilePicturePublicId: uploadResult.public_id,
+      },
       { new: true }
     );
 
     res.status(200).json({
       message: "Profile picture updated",
-      path: newPath,
+      path: uploadResult.secure_url,
       user: updatedUser,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error updating profile picture", error });
+    res.status(500).json({
+      message: "Error updating profile picture",
+      error: error.message,
+    });
   }
 };
 
+// 🔄 Nur Coverbild aktualisieren
 export const updateCoverPic = async (req, res) => {
   try {
     const userId = req.params.id;
-    const filename = req.file.filename;
-    const newPath = `/images/cover/${filename}`;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file provided" });
+    }
+
+    const filePath = req.file.path;
+    const uploadResult = await uploadToCloudinary(filePath, "cover_pics");
+
+    fs.unlinkSync(filePath);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { coverPicture: newPath },
+      {
+        coverPicture: uploadResult.secure_url,
+        coverPicturePublicId: uploadResult.public_id,
+      },
       { new: true }
     );
 
     res.status(200).json({
       message: "Cover picture updated",
-      path: newPath,
+      path: uploadResult.secure_url,
       user: updatedUser,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error updating cover picture", error });
+    res
+      .status(500)
+      .json({ message: "Error updating cover picture", error: error.message });
   }
 };
 

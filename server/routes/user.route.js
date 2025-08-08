@@ -1,44 +1,46 @@
-// routes/user.routes.js
 import express from "express";
 import {
+  getUserController,
   updateUserController,
   deleteUserController,
-  getUserController,
-  getAllUsersController,
-  followUserController,
-  unfollowUserController,
-  createUserController,
-  updateProfilePic,
-  updateCoverPic,
 } from "../controllers/user.controller.js";
 
-import {
-  upload,
-  uploadProfilePic,
-  uploadCoverPic,
-} from "../middleware/upload.js";
-
-import User from "../models/user.model.js";
+import { verifyToken } from "../middleware/verifyToken.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 const router = express.Router();
 
-// 🔁 Vorab aktuellen User laden, damit Multer Zugriff hat
-router.param("id", async (req, res, next, id) => {
-  try {
-    const currentUser = await User.findById(id);
-    if (!currentUser)
-      return res.status(404).json({ message: "User not found" });
-    req.currentUser = currentUser;
-    next();
-  } catch (err) {
-    console.error("User laden fehlgeschlagen:", err);
-    res.status(500).json({ message: "Serverfehler" });
+// 📂 Upload-Ordner sicherstellen
+const ensureDir = (dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
   }
+};
+
+ensureDir("uploads/tmp");
+
+// 📸 Multer-Konfiguration (temporäre Speicherung, bevor Cloudinary übernimmt)
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/tmp");
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + "-" + file.fieldname + ext);
+  },
 });
 
-// 🔄 Beide Bilder gleichzeitig updaten
+const upload = multer({ storage });
+
+// 🔹 GET User
+router.get("/:id", getUserController);
+
+// 🔹 UPDATE User (Profil- & Coverbild gleichzeitig möglich)
 router.put(
   "/:id",
+  verifyToken,
   upload.fields([
     { name: "profilePicture", maxCount: 1 },
     { name: "coverPicture", maxCount: 1 },
@@ -46,25 +48,7 @@ router.put(
   updateUserController
 );
 
-// Nur Profilbild
-router.put(
-  "/profile-pic/:id",
-  uploadProfilePic.single("profilePicture"),
-  updateProfilePic
-);
-
-// Nur Coverbild
-router.put(
-  "/cover-pic/:id",
-  uploadCoverPic.single("coverPicture"),
-  updateCoverPic
-);
-
-router.delete("/:id", deleteUserController);
-router.get("/:id", getUserController);
-router.get("/", getAllUsersController);
-router.put("/:id/follow", followUserController);
-router.put("/:id/unfollow", unfollowUserController);
-router.post("/", createUserController);
+// 🔹 DELETE User
+router.delete("/:id", verifyToken, deleteUserController);
 
 export default router;

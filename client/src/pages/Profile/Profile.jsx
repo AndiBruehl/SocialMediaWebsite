@@ -7,13 +7,21 @@ import axiosInstance from "../../utils/api/axiosInstance";
 
 import defaultAvatar from "../../assets/avatar.webp";
 
-const Profile = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+// Optional: eigene API-Basis für alte, lokal gespeicherte Pfade
+const API_BASE = "http://localhost:9000";
 
+// Nutzt Cloudinary-URL, sonst (für Altbestände) lokalen Pfad, sonst null
+const resolveImageUrl = (src) => {
+  if (!src || typeof src !== "string" || !src.trim()) return null;
+  if (/^https?:\/\//i.test(src)) return src; // Cloudinary (oder andere absolute Quelle)
+  return `${API_BASE}${src}`; // alter lokaler Pfad wie "/images/profile/xyz.png"
+};
+
+const Profile = () => {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
+
+  useEffect(() => window.scrollTo(0, 0), []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,7 +32,6 @@ const Profile = () => {
         console.error("Error loading profile:", err);
       }
     };
-
     fetchUser();
   }, [userId]);
 
@@ -36,28 +43,28 @@ const Profile = () => {
     );
   }
 
+  const coverUrl = resolveImageUrl(user.coverPicture);
+  const avatarUrl = resolveImageUrl(user.profilePicture) || defaultAvatar;
+
   return (
-    <div className="flex flex-col rounded-[25%]">
+    <div className="flex flex-col">
       {/* Cover + Profile Picture */}
       <div style={{ flex: 9, backgroundColor: "white" }}>
         <div className="relative h-[200px] bg-gray-100">
           {/* Cover Picture */}
-          {user.coverPicture?.trim() && (
+          {coverUrl && (
             <img
-              src={`http://localhost:9000${user.coverPicture}`}
-              alt="coverImage"
+              src={coverUrl}
+              alt="Cover"
               className="w-full h-[200px] object-cover"
+              loading="lazy"
             />
           )}
 
           {/* Profile Picture */}
           <img
-            src={
-              user?.profilePicture
-                ? `http://localhost:9000${user.profilePicture}`
-                : defaultAvatar
-            }
-            alt="profilePic"
+            src={avatarUrl}
+            alt="Profile"
             className="h-[100px] w-[100px] object-cover rounded-full absolute left-0 right-0 m-auto top-[150px] border-4 border-white shadow-md"
           />
         </div>

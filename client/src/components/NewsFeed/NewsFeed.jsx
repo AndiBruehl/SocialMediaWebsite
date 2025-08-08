@@ -4,23 +4,18 @@ import Post from "../Post/Post.jsx";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { useParams } from "react-router-dom";
 
-const userIdTemp = "685ead8decc284f95632bd55"; // fallback für Feed
-
 const NewsFeed = () => {
   const [posts, setPosts] = useState([]);
-  const { userId } = useParams(); // von Route → wenn vorhanden, dann Profilseite
+  const { userId } = useParams(); // Wenn gesetzt → Profilseite
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const isProfilePage = Boolean(userId);
-        const endpoint = isProfilePage
-          ? `/post/user/${userId}`
-          : `/post/timeline/${userIdTemp}`;
+        const endpoint = userId
+          ? `/post/user/${userId}` // nur die Posts des Users
+          : `/post/all`; // alle Posts für Startseite
 
         const res = await axiosInstance.get(endpoint);
-
-        // Je nach Route: Zugriff auf `posts` oder `timelinePosts`
         const postData = res.data.posts || res.data.timelinePosts || [];
 
         const sortedPosts = postData.sort(
@@ -48,14 +43,17 @@ const NewsFeed = () => {
       className="bg-slate-200"
     >
       <br />
-      <CreatePost />
+      {/* Post erstellen nur, wenn kein Profil aufgerufen */}
+      {!userId && <CreatePost />}
       <br />
       <hr />
-      {posts
-        .filter((post) => post && post._id && post.userId)
-        .map((post) => (
-          <Post key={post._id} post={post} />
-        ))}
+      {posts.length > 0 ? (
+        posts
+          .filter((post) => post && post._id && post.userId)
+          .map((post) => <Post key={post._id} post={post} />)
+      ) : (
+        <p className="mt-6 text-gray-500">Keine Posts gefunden.</p>
+      )}
       <br />
       <hr />
     </div>
