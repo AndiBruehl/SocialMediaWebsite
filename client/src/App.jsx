@@ -65,6 +65,22 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <Pages.Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages/:peerId"
+            element={
+              <ProtectedRoute>
+                <Pages.Messages />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         <Route path="*" element={<Pages.NotFound />} />

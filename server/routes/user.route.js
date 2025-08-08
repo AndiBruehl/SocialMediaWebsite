@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getAllUsersController,
   getUserController,
   updateUserController,
   deleteUserController,
@@ -18,10 +19,9 @@ const ensureDir = (dir) => {
     fs.mkdirSync(dir, { recursive: true });
   }
 };
-
 ensureDir("uploads/tmp");
 
-// 📸 Multer-Konfiguration (temporäre Speicherung, bevor Cloudinary übernimmt)
+// 📸 Multer: temporär speichern, bevor Cloudinary übernimmt
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/tmp");
@@ -31,13 +31,13 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.fieldname + ext);
   },
 });
-
 const upload = multer({ storage });
 
-// 🔹 GET User
+// ⚠️ Reihenfolge: erst "/" dann "/:id"
+router.get("/", getAllUsersController);
 router.get("/:id", getUserController);
 
-// 🔹 UPDATE User (Profil- & Coverbild gleichzeitig möglich)
+// Update (Profil & Cover möglich)
 router.put(
   "/:id",
   verifyToken,
@@ -48,7 +48,7 @@ router.put(
   updateUserController
 );
 
-// 🔹 DELETE User
+// Delete
 router.delete("/:id", verifyToken, deleteUserController);
 
 export default router;

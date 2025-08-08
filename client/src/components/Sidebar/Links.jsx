@@ -16,15 +16,15 @@ export default function Links() {
         <BiHomeAlt className="sidebar-icon" />
         <span className="link-text">Feed</span>
       </Link>
-      <Link to="/groups" className="sidebar-link">
+      {/* <Link to="/groups" className="sidebar-link">
         <MdGroups className="sidebar-icon" />
         <span className="link-text">Groups</span>
-      </Link>
-      <Link to="/chats" className="sidebar-link">
+      </Link> */}
+      <Link to="/messages" className="sidebar-link">
         <PiChatsBold className="sidebar-icon" />
         <span className="link-text">Chats</span>
       </Link>
-      <Link to="/bookmarks" className="sidebar-link">
+      {/* <Link to="/bookmarks" className="sidebar-link">
         <HiOutlineBookmark className="sidebar-icon" />
         <span className="link-text">Bookmarks</span>
       </Link>
@@ -43,7 +43,7 @@ export default function Links() {
       <Link to="/events" className="sidebar-link">
         <FaRegCalendarCheck className="sidebar-icon" />
         <span className="link-text">Events</span>
-      </Link>
+      </Link> */}
     </ul>
   );
 }

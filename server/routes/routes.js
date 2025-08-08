@@ -6,6 +6,7 @@ import postRoutes from "./post.route.js";
 import messageRoutes from "./message.route.js";
 import groupRoutes from "./group.route.js";
 import notificationRoutes from "./notification.route.js";
+import conversationRoutes from "./conversation.route.js";
 
 const router = express.Router();
 const baseUrl = "api/v1";
@@ -17,5 +18,6 @@ router.use(`/${baseUrl}/posts`, postRoutes); // Alias, falls du plural aufrufst
 router.use(`/${baseUrl}/messages`, messageRoutes);
 router.use(`/${baseUrl}/group`, groupRoutes);
 router.use(`/${baseUrl}/notifications`, notificationRoutes); // ✅ NEU
+router.use(`/${baseUrl}/conversations`, conversationRoutes); // ✅ NEU
 
 export default router;
