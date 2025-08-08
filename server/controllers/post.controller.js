@@ -37,7 +37,7 @@ export const createPostController = async (req, res) => {
     }
 
     const newPost = await createPost({
-      userId,
+      userId: new mongoose.Types.ObjectId(userId),
       desc,
       img: imageUrl,
       createdAt: Date.now(),

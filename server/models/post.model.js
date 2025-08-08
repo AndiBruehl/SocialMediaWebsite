@@ -15,10 +15,10 @@ const commentSchema = new mongoose.Schema({
 });
 
 const postSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  desc: { type: String, default: "" }, // nicht required
-  img: { type: String, default: "" }, // Cloudinary URL
-  likes: { type: Array, default: [] },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // <— WICHTIG
+  desc: { type: String, default: "" },
+  img: { type: String, default: "" },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // <— besser so
   comments: { type: [commentSchema], default: [] },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
