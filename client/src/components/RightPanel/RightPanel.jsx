@@ -237,7 +237,7 @@ export const RightPanelProfile = ({ user }) => {
         maxWidth: "300px",
         textAlign: "end",
       }}
-      className="bg-slate-400 p-5 rounded-[15px] text-white"
+      className="bg-slate-400 shadow-md p-5 rounded-[15px] text-white"
     >
       <h1 className="font-bold text-xl mb-[20px]">User Info</h1>
 
