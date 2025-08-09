@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { BiSolidGift } from "react-icons/bi";
+import { GrAnnounce } from "react-icons/gr";
 import adImage from "../../assets/ad.png";
 import { AuthContext } from "../../context/AuthContext";
 import axiosInstance from "../../utils/api/axiosInstance";
@@ -143,9 +143,9 @@ export const RightPanelHome = () => {
       <div className="pt-[20px] pr-[20px] space-y-6">
         {/* kleines Widget */}
         <div className="flex items-center justify-center">
-          <BiSolidGift className="w-[50px] h-[50px] mr-[10px]" />
+          <GrAnnounce className="w-[50px] h-[50px] mr-[10px]" />
           <span className="text-xs">
-            <b>Liana Weiss</b> und <b>2 weitere</b> haben heute Geburtstag.
+            <b>Current</b> Announcements:
           </span>
         </div>
 
