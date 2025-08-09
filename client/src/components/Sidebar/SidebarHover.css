@@ -82,3 +82,65 @@
   opacity: 1;
   transform: scale(1.1);
 }
+
+/* Avatar */
+.sidebar-content img {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease;
+}
+.sidebar-content img:hover {
+  transform: scale(1.05);
+}
+
+/* Usernamen bei eingeklappter Sidebar ausblenden */
+.sidebar-wrapper:not(:hover) .text-sm {
+  display: none;
+}
+
+/* ------------------------- */
+/* Online Indicator (Badge)  */
+/* ------------------------- */
+.online-badge {
+  position: relative;
+}
+
+.online-badge::after {
+  content: "";
+  position: absolute;
+  right: -2px; /* leicht außerhalb unten rechts */
+  bottom: -2px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e; /* Tailwind green-500 */
+  border: 2px solid #243447; /* Border in Sidebar-Farbe für klaren Rand */
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.8);
+  animation: onlinePulse 1.8s ease-out infinite;
+}
+
+/* Pulsierende Animation */
+@keyframes onlinePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.8);
+    transform: scale(1);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    transform: scale(1);
+  }
+}
+
+/* Optional: “offline”-Stil, falls du ihn brauchst */
+.offline-badge::after {
+  background: #9ca3af; /* gray-400 */
+  animation: none;
+  box-shadow: none;
+}

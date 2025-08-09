@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+// client/src/pages/Profile/Profile.jsx
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { RightPanelProfile } from "../../components/RightPanel/RightPanel";
@@ -6,6 +7,7 @@ import NewsFeed from "../../components/NewsFeed/NewsFeed";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
 import defaultAvatar from "../../assets/avatar.webp";
+import { toast } from "react-toastify";
 
 const API_BASE = "http://localhost:9000";
 const resolveImageUrl = (src) => {
@@ -18,21 +20,47 @@ const Profile = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext) || {};
+  const me = useMemo(() => {
+    if (currentUser) return currentUser;
+    try {
+      const raw = localStorage.getItem("user");
+      const parsed = raw ? JSON.parse(raw) : null;
+      return parsed?.user || parsed || null;
+    } catch {
+      return null;
+    }
+  }, [currentUser]);
+
   const [user, setUser] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
 
   useEffect(() => window.scrollTo(0, 0), []);
 
+  // Profil laden
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance.get(`/users/${userId}`);
-        setUser(res.data.userInfo);
+        const u = res.data.userInfo;
+        setUser(u);
+        setFollowersCount(Array.isArray(u?.followers) ? u.followers.length : 0);
+        // Follows-Status lokal bestimmen (Strings vergleichen)
+        if (me?._id && Array.isArray(me.following)) {
+          setIsFollowing(
+            me.following.map(String).includes(String(u._id || userId))
+          );
+        } else {
+          setIsFollowing(false);
+        }
       } catch (err) {
         console.error("Error loading profile:", err);
+        toast.error("Profil konnte nicht geladen werden.");
       }
     };
     fetchUser();
-  }, [userId]);
+  }, [userId, me?._id, me?.following]);
 
   if (!user) {
     return (
@@ -45,8 +73,67 @@ const Profile = () => {
   const coverUrl = resolveImageUrl(user.coverPicture);
   const avatarUrl = resolveImageUrl(user.profilePicture) || defaultAvatar;
 
-  const isOwnProfile =
-    currentUser && String(currentUser._id) === String(user._id || userId);
+  const isOwnProfile = me && String(me._id) === String(user._id || userId);
+
+  const applyLocalFollowingChange = (follow) => {
+    // followers-Zahl im angezeigten Profil aktualisieren
+    setFollowersCount((c) => (follow ? c + 1 : Math.max(0, c - 1)));
+    setIsFollowing(follow);
+
+    // optional: currentUser.following lokal updaten (Context evtl. ohne Setter)
+    try {
+      const raw = localStorage.getItem("user");
+      const parsed = raw ? JSON.parse(raw) : null;
+      const stored = parsed?.user || parsed || null;
+      if (stored && Array.isArray(stored.following)) {
+        const idStr = String(user._id);
+        const exists = stored.following.map(String).includes(idStr);
+        let nextFollowing = stored.following.slice();
+        if (follow && !exists) nextFollowing.push(idStr);
+        if (!follow && exists)
+          nextFollowing = nextFollowing.filter((x) => String(x) !== idStr);
+        const next = {
+          ...parsed,
+          user: { ...(parsed?.user || stored), following: nextFollowing },
+        };
+        localStorage.setItem("user", JSON.stringify(next));
+      }
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const handleFollow = async () => {
+    if (!me?._id || busy) return;
+    setBusy(true);
+    try {
+      await axiosInstance.put(`/users/${user._id}/follow`, { userId: me._id });
+      applyLocalFollowingChange(true);
+      toast.success(`Du folgst jetzt ${user.username}`);
+    } catch (e) {
+      console.error("Follow fehlgeschlagen:", e?.response?.data || e.message);
+      toast.error("Folgen fehlgeschlagen.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    if (!me?._id || busy) return;
+    setBusy(true);
+    try {
+      await axiosInstance.put(`/users/${user._id}/unfollow`, {
+        userId: me._id,
+      });
+      applyLocalFollowingChange(false);
+      toast.success(`Du folgst ${user.username} nicht mehr`);
+    } catch (e) {
+      console.error("Unfollow fehlgeschlagen:", e?.response?.data || e.message);
+      toast.error("Entfolgen fehlgeschlagen.");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -73,22 +160,53 @@ const Profile = () => {
           <h1 className="font-bold text-2xl">
             {user.username || "Unknown user"}
           </h1>
-          <span className="text-sm text-gray-600 mb-4">
+          <span className="text-sm text-gray-600 mb-2">
             {typeof user.desc === "string" && user.desc.trim()
               ? user.desc
               : "No bio available"}
           </span>
 
-          {/* Nachricht senden nur anzeigen, wenn fremdes Profil */}
-          {!isOwnProfile && (
-            <button
-              type="button"
-              onClick={() => navigate(`/messages/${user._id || userId}`)}
-              className="px-4 py-2 mb-5 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition"
-            >
-              Nachricht senden
-            </button>
-          )}
+          {/* Followers-Zähler (optional) */}
+          <span className="text-xs text-gray-500 mb-4">
+            {followersCount} Follower
+          </span>
+
+          {/* Buttons */}
+          <div className="flex items-center gap-2 mb-5">
+            {/* Nachricht senden nur anzeigen, wenn fremdes Profil */}
+            {!isOwnProfile && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => navigate(`/messages/${user._id || userId}`)}
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition"
+                >
+                  Nachricht senden
+                </button>
+
+                {/* Follow/Unfollow */}
+                {isFollowing ? (
+                  <button
+                    type="button"
+                    onClick={handleUnfollow}
+                    disabled={busy}
+                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition disabled:opacity-50"
+                  >
+                    Entfolgen
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleFollow}
+                    disabled={busy}
+                    className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 transition disabled:opacity-50"
+                  >
+                    Folgen
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 

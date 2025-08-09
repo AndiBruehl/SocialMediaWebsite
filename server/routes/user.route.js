@@ -4,6 +4,9 @@ import {
   getUserController,
   updateUserController,
   deleteUserController,
+  // 👇 these two were missing
+  followUserController,
+  unfollowUserController,
 } from "../controllers/user.controller.js";
 
 import { verifyToken } from "../middleware/verifyToken.js";
@@ -14,20 +17,17 @@ import fs from "fs";
 const router = express.Router();
 
 const ensureDir = (dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 ensureDir("uploads/tmp");
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/tmp");
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + "-" + file.fieldname + ext);
-  },
+  destination: (req, file, cb) => cb(null, "uploads/tmp"),
+  filename: (req, file, cb) =>
+    cb(
+      null,
+      Date.now() + "-" + file.fieldname + path.extname(file.originalname)
+    ),
 });
 const upload = multer({ storage });
 
@@ -36,6 +36,11 @@ router.get("/", getAllUsersController);
 
 // === GET ONE
 router.get("/:id", getUserController);
+
+// === FOLLOW / UNFOLLOW  ✅ add these
+// If you want to enforce auth, add verifyToken between path and controller.
+router.put("/:id/follow", /* verifyToken, */ followUserController);
+router.put("/:id/unfollow", /* verifyToken, */ unfollowUserController);
 
 // === UPDATE (profile + cover)
 router.put(
