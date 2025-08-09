@@ -24,7 +24,7 @@ const NewsFeed = () => {
 
         setPosts(sortedPosts);
       } catch (error) {
-        console.error("Fehler beim Laden der Posts:", error);
+        console.error("Error loading the posts:", error);
       }
     };
 
@@ -34,7 +34,7 @@ const NewsFeed = () => {
   // Post löschen
   const handleDeleted = (postId) => {
     setPosts((prev) => prev.filter((p) => p._id !== postId));
-    toast.success("Post erfolgreich gelöscht ✅", {
+    toast.success("Post deleted successfully... ✅", {
       onClose: () => window.location.reload(),
     });
   };
@@ -44,7 +44,7 @@ const NewsFeed = () => {
     setPosts((prev) =>
       prev.map((p) => (p._id === updatedPost._id ? updatedPost : p))
     );
-    toast.success("Post erfolgreich aktualisiert ✏️", {
+    toast.success("Post updated successfully ✏️", {
       onClose: () => window.location.reload(),
     });
   };
@@ -76,7 +76,7 @@ const NewsFeed = () => {
             />
           ))
       ) : (
-        <p className="mt-6 text-gray-500">Keine Posts gefunden.</p>
+        <p className="mt-6 text-gray-500">No Posts found...</p>
       )}
       <br />
       <hr />

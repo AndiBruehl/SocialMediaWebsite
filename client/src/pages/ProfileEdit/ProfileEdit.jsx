@@ -116,16 +116,13 @@ const EditProfile = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast.success("Profil aktualisiert.");
+      toast.success("Profile updated successfully.");
       localStorage.setItem("user", JSON.stringify(res.data.user || res.data));
       navigate(`/profile/${userId}`);
     } catch (err) {
-      console.error(
-        "❌ Fehler beim Update:",
-        err?.response?.data || err.message
-      );
+      console.error("❌ Error found:", err?.response?.data || err.message);
       toast.error(
-        `Update fehlgeschlagen: ${err?.response?.data?.message || err.message}`
+        `Update failed: ${err?.response?.data?.message || err.message}`
       );
     } finally {
       setSaving(false);
@@ -136,7 +133,7 @@ const EditProfile = () => {
     <div className="min-h-screen bg-slate-200 text-slate-100 flex items-center justify-center p-6">
       <div className="w-full max-w-5xl bg-slate-800/70 backdrop-blur border border-slate-700 rounded-2xl shadow-xl p-6 md:p-8">
         <h2 className="text-2xl font-bold tracking-tight mb-6">
-          Profil bearbeiten
+          Update profile
         </h2>
 
         <form
@@ -148,14 +145,14 @@ const EditProfile = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm text-slate-300 mb-1">
-                Username
+                user name
               </label>
               <input
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
                 required
-                placeholder="Dein Benutzername"
+                placeholder="your user name"
                 className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -181,7 +178,7 @@ const EditProfile = () => {
                   name="from"
                   value={formData.from}
                   onChange={handleChange}
-                  placeholder="Herkunft"
+                  placeholder="from..."
                   className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -194,7 +191,7 @@ const EditProfile = () => {
                 value={formData.desc}
                 onChange={handleChange}
                 rows={4}
-                placeholder="Erzähl etwas über dich…"
+                placeholder="Tell something about you..."
                 className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
               />
             </div>
@@ -221,7 +218,7 @@ const EditProfile = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm text-slate-300 mb-1">
-                Profilbild
+                Profile picture
               </label>
               <input
                 type="file"
@@ -231,13 +228,13 @@ const EditProfile = () => {
                 className="block w-full rounded-xl border border-slate-600 bg-transparent text-slate-200 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-slate-600 file:bg-slate-700 file:text-slate-200 hover:file:bg-slate-600"
               />
               <p className="text-slate-400 text-xs mt-2">
-                PNG/JPG, max. ein Bild auswählen
+                PNG/JPG, please select only one picture
               </p>
               {profilePreview && (
                 <div className="mt-3 space-y-2">
                   <img
                     src={profilePreview}
-                    alt="Profilbild-Vorschau"
+                    alt="profilePreview"
                     className="w-full rounded-xl border border-slate-600"
                   />
                   <button
@@ -245,7 +242,7 @@ const EditProfile = () => {
                     onClick={clearProfileImage}
                     className="inline-flex items-center justify-center rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-100 hover:border-blue-500 transition"
                   >
-                    Entfernen
+                    remove
                   </button>
                 </div>
               )}
@@ -253,7 +250,7 @@ const EditProfile = () => {
 
             <div>
               <label className="block text-sm text-slate-300 mb-1">
-                Coverbild
+                Cover image
               </label>
               <input
                 type="file"
@@ -263,7 +260,7 @@ const EditProfile = () => {
                 className="block w-full rounded-xl border border-slate-600 bg-transparent text-slate-200 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-slate-600 file:bg-slate-700 file:text-slate-200 hover:file:bg-slate-600"
               />
               <p className="text-slate-400 text-xs mt-2">
-                Breites Bild empfohlen (z. B. 1500×500)
+                Wide image recommended (e.g. 1500×500)
               </p>
               {coverPreview && (
                 <div className="mt-3 space-y-2">
@@ -277,7 +274,7 @@ const EditProfile = () => {
                     onClick={clearCoverImage}
                     className="inline-flex items-center justify-center rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-100 hover:border-blue-500 transition"
                   >
-                    Entfernen
+                    remove
                   </button>
                 </div>
               )}
@@ -291,14 +288,14 @@ const EditProfile = () => {
               onClick={() => navigate(-1)}
               className="inline-flex items-center justify-center rounded-xl border border-slate-600 px-4 py-2 font-semibold text-slate-100 hover:border-blue-500 transition"
             >
-              Abbrechen
+              Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
               className="inline-flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2 font-semibold text-white shadow"
             >
-              {saving ? "Speichern…" : "Speichern"}
+              {saving ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

@@ -61,7 +61,7 @@ export default function Messages() {
         if (mounted) setAllUsers(filtered);
       } catch (e) {
         console.error(
-          "User-Liste laden fehlgeschlagen:",
+          "Failed loading user list:",
           e?.response?.data || e.message
         );
       } finally {
@@ -98,10 +98,7 @@ export default function Messages() {
           const res = await axiosInstance.get(`/users/${peerIdParam}`);
           user = res.data?.userInfo || res.data || null;
         } catch (e) {
-          console.error(
-            "Peer laden fehlgeschlagen:",
-            e?.response?.data || e.message
-          );
+          console.error("Peer loading failed:", e?.response?.data || e.message);
         }
       }
 
@@ -122,7 +119,7 @@ export default function Messages() {
           setMessages(hist);
         } catch (e) {
           console.error(
-            "Historie laden fehlgeschlagen:",
+            "loading history failed:",
             e?.response?.data || e.message
           );
         }
@@ -199,7 +196,7 @@ export default function Messages() {
         // Not used yet, but left for group/threads later
       }
     } catch (e) {
-      console.error("Senden fehlgeschlagen:", e?.response?.data || e.message);
+      console.error("failed sending:", e?.response?.data || e.message);
     } finally {
       setSending(false);
     }
@@ -208,15 +205,11 @@ export default function Messages() {
   // LEFT
   const leftPanel = (
     <div className="w-full h-full overflow-y-auto">
-      <div className="p-3 font-semibold border-b">
-        Neue Unterhaltung starten
-      </div>
+      <div className="p-3 font-semibold border-b">Start a conversation.</div>
       {loadingUsers ? (
-        <div className="p-3 text-sm text-gray-500">Laden…</div>
+        <div className="p-3 text-sm text-gray-500">Loading...</div>
       ) : allUsers.length === 0 ? (
-        <div className="p-3 text-sm text-gray-500">
-          Keine anderen Benutzer gefunden.
-        </div>
+        <div className="p-3 text-sm text-gray-500">No other users found.</div>
       ) : (
         <ul>
           {allUsers.map((u) => (
@@ -234,7 +227,7 @@ export default function Messages() {
                   onClick={() => startDraftWith(u)}
                   className="mt-1 px-2 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-500"
                 >
-                  Nachricht senden
+                  Send a message
                 </button>
               </div>
             </li>
@@ -253,15 +246,15 @@ export default function Messages() {
       <div className="bg-gray-100">
         {resolvingPeer ? (
           <div className="h-full flex items-center justify-center text-gray-500">
-            Lädt Konversation…
+            Loading conversations…
           </div>
         ) : !draftPeer && !activeThread ? (
           <div className="h-full flex items-center justify-center text-blue-900">
-            Keine Konversation ausgewählt
+            No conversation selected
           </div>
         ) : draftPeer ? (
           <ChatWindow
-            title={draftPeer.username || "Unbekannt"}
+            title={draftPeer.username || "Unknown"}
             avatar={url(draftPeer.profilePicture)}
             messages={messages}
             meId={me?._id}
@@ -273,8 +266,8 @@ export default function Messages() {
             <ChatWindow
               title={
                 activeThread.isGroup
-                  ? activeThread.name || "Gruppe"
-                  : activeThread.peer?.username || "Unbekannt"
+                  ? activeThread.name || "Group"
+                  : activeThread.peer?.username || "Unknown"
               }
               avatar={
                 activeThread.isGroup

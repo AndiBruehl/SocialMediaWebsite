@@ -44,7 +44,7 @@ export default function ChatWindow({
         ref={messagesContainerRef}
       >
         {!messages || messages.length === 0 ? (
-          <div className="text-sm text-gray-500">Noch keine Nachrichten.</div>
+          <div className="text-sm text-gray-500">No messages yet.</div>
         ) : (
           [...messages]
             .reverse() // Reverse messages to show newest at top
@@ -58,7 +58,7 @@ export default function ChatWindow({
                     hour: "2-digit",
                     minute: "2-digit",
                   })
-                : "Unbekannt";
+                : "Unknown";
               return (
                 <div
                   key={key}
@@ -92,7 +92,7 @@ export default function ChatWindow({
         <div className="flex gap-2">
           <input
             className="flex-1 border rounded px-3 py-2"
-            placeholder="Nachricht schreiben…"
+            placeholder="Write a message…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -107,7 +107,7 @@ export default function ChatWindow({
             disabled={sending || !input.trim()}
             className="px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-50 flex items-center gap-2"
           >
-            <BiSend /> Senden
+            <BiSend /> Send
           </button>
         </div>
       </div>

@@ -154,9 +154,11 @@ export const RightPanelHome = () => {
         <div>
           <h1 className="font-bold text-lg mb-3">ONLINE</h1>
           {loadingUsers ? (
-            <div className="text-sm text-white/80">Lade Benutzer…</div>
+            <div className="text-sm text-white/80">Loading users...</div>
           ) : onlineUsers.length === 0 ? (
-            <div className="text-sm text-white/80">Gerade niemand online.</div>
+            <div className="text-sm text-white/80">
+              No one else is online at the moment.
+            </div>
           ) : (
             <div className="flex flex-col gap-1">
               {onlineUsers.map((u) => (
@@ -260,10 +262,10 @@ export const RightPanelProfile = ({ user }) => {
         Follower
       </h1>
       {loading ? (
-        <div className="text-sm text-white/80 text-left">Lade Follower…</div>
+        <div className="text-sm text-white/80 text-left">Loading follower…</div>
       ) : followers.length === 0 ? (
         <div className="text-sm text-white/80 text-left">
-          Noch keine Follower.
+          You don't have any follower yet.
         </div>
       ) : (
         <div className="flex flex-col gap-2 text-left">

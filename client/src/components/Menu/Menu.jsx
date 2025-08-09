@@ -42,14 +42,6 @@ const Menu = () => {
         <BiHomeAlt className="text-xl" />
       </Link>
 
-      {/* <Link
-        to="/timeline"
-        className="flex items-center justify-end gap-3 text-gray-800 hover:text-blue-600 transition-colors"
-      >
-        <span className="text-base font-medium">Timeline</span>
-        <CiViewTimeline className="text-xl" />
-      </Link> */}
-
       {userId && (
         <>
           <Link

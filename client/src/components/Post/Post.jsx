@@ -46,7 +46,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       try {
         if (!post?.userId) return;
 
-        // Wenn schon gepopulated:
+        // Wenn schon populated:
         if (typeof post.userId === "object" && post.userId.username) {
           setAuthor(post.userId);
           return;
@@ -95,7 +95,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       });
       if (Array.isArray(res.data?.likes)) setLikes(res.data.likes);
     } catch (e) {
-      console.error("Like fehlgeschlagen:", e?.response?.data || e.message);
+      console.error("Liking failed:", e?.response?.data || e.message);
     } finally {
       setWorking(false);
     }
@@ -117,7 +117,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       setEditOpen(false);
       if (onUpdated) onUpdated(updated);
     } catch (e) {
-      console.error("Update fehlgeschlagen:", e?.response?.data || e.message);
+      console.error("Update failed:", e?.response?.data || e.message);
     }
   };
 
@@ -129,7 +129,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       setMenuOpen(false);
       if (onDeleted) onDeleted(post._id); // Parent kann Karte entfernen
     } catch (e) {
-      console.error("Löschen fehlgeschlagen:", e?.response?.data || e.message);
+      console.error("Deleting failed:", e?.response?.data || e.message);
     } finally {
       setDeleting(false);
     }
@@ -173,7 +173,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
                 }`}
                 className="font-semibold leading-5 hover:underline"
               >
-                {author?.username || "Unbekannt"}
+                {author?.username || "Unknown"}
               </Link>
               <span className="text-xs text-gray-500">
                 {post?.createdAt
@@ -196,7 +196,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
                   type="button"
                   className="p-2 rounded-full hover:bg-slate-100"
                   onClick={() => setMenuOpen((o) => !o)}
-                  aria-label="Post-Optionen"
+                  aria-label="Post options"
                 >
                   <MdOutlineMoreVert className="text-xl" />
                 </button>
@@ -207,14 +207,14 @@ const Post = ({ post, onDeleted, onUpdated }) => {
                       className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm"
                       onClick={handleOpenEdit}
                     >
-                      Post bearbeiten
+                      Update post
                     </button>
                     <button
                       className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm text-red-600 disabled:opacity-50"
                       onClick={handleDelete}
                       disabled={deleting}
                     >
-                      {deleting ? "Lösche…" : "Post löschen"}
+                      {deleting ? "Deleting..." : "Delete post"}
                     </button>
                   </div>
                 )}
@@ -280,7 +280,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       {editOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-4">
-            <h3 className="font-semibold mb-3">Post bearbeiten</h3>
+            <h3 className="font-semibold mb-3">Update post</h3>
             <form onSubmit={handleSubmitEdit} className="space-y-3">
               <textarea
                 value={editDesc}
@@ -294,13 +294,13 @@ const Post = ({ post, onDeleted, onUpdated }) => {
                   className="px-3 py-2 rounded border"
                   onClick={() => setEditOpen(false)}
                 >
-                  Abbrechen
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="px-3 py-2 rounded bg-blue-600 text-white"
                 >
-                  Speichern
+                  Save
                 </button>
               </div>
             </form>

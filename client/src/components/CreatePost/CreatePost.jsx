@@ -25,7 +25,7 @@ const uploadToCloudinary = async (file) => {
     }
   );
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || "Upload fehlgeschlagen");
+  if (!res.ok) throw new Error(data.error?.message || "Upload failed");
   return data.secure_url;
 };
 
@@ -52,11 +52,11 @@ export default function CreatePost() {
 
   const handleSubmit = async () => {
     if (!user?._id) {
-      toast.error("Du bist nicht eingeloggt.");
+      toast.error("You are not logged in.");
       return;
     }
     if (!desc.trim() && !file) {
-      toast.info("Schreib etwas oder wähle ein Bild aus.");
+      toast.info("Write something or choose a picture...");
       return;
     }
 
@@ -79,15 +79,14 @@ export default function CreatePost() {
       setShowLocation(false);
 
       // ✅ Erfolg-Toast + Auto-Reload nach Ablauf
-      toast.success("Post erfolgreich erstellt!", {
+      toast.success("Post created successfully!", {
         autoClose: 1800,
         onClose: () => window.location.reload(),
       });
     } catch (e) {
       console.error("Post create failed:", e?.response?.data || e.message);
       toast.error(
-        e?.response?.data?.message ||
-          "Erstellen fehlgeschlagen. Versuch’s nochmal."
+        e?.response?.data?.message || "Creating failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -132,7 +131,7 @@ export default function CreatePost() {
           <div className="mt-3">
             <input
               type="text"
-              placeholder="Ort hinzufügen (z.B. Berlin, DE)"
+              placeholder="Add a location..."
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className="w-full bg-transparent border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"

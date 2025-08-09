@@ -23,7 +23,7 @@ const uploadToCloudinary = async (file) => {
     }
   );
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || "Upload fehlgeschlagen");
+  if (!res.ok) throw new Error(data.error?.message || "Upload failed");
   return data.secure_url;
 };
 
@@ -71,7 +71,7 @@ export default function PostDetail() {
           }
         }
       } catch (e) {
-        setErr(e?.response?.data?.message || "Fehler beim Laden");
+        setErr(e?.response?.data?.message || "Error while loading:");
       } finally {
         setLoading(false);
       }
@@ -92,7 +92,7 @@ export default function PostDetail() {
       });
       if (Array.isArray(res.data.likes)) setLikes(res.data.likes);
     } catch (e) {
-      console.error("Like fehlgeschlagen:", e?.response?.data || e.message);
+      console.error("Liking failed:", e?.response?.data || e.message);
     } finally {
       setWorkingLike(false);
     }
@@ -124,10 +124,7 @@ export default function PostDetail() {
       setCommentText("");
       setCommentFile(null);
     } catch (e) {
-      console.error(
-        "Kommentar fehlgeschlagen:",
-        e?.response?.data || e.message
-      );
+      console.error("Commenting failed:", e?.response?.data || e.message);
     } finally {
       setPostingComment(false);
     }
@@ -169,7 +166,7 @@ export default function PostDetail() {
             }`}
             className="font-semibold hover:underline"
           >
-            {author?.username || "Unbekannt"}
+            {author?.username || "Unknown"}
           </Link>
           <span className="text-xs text-gray-500">
             {post?.createdAt
@@ -204,7 +201,7 @@ export default function PostDetail() {
           className={`inline-flex items-center gap-2 px-3 py-1 rounded border ${
             isLikedByMe ? "bg-blue-600 text-white" : "bg-white"
           }`}
-          title={isLikedByMe ? "Like entfernen" : "Like setzen"}
+          title={isLikedByMe ? "remove like" : "set like"}
         >
           <BiSolidLike />
           <span>{likes.length}</span>
@@ -216,7 +213,7 @@ export default function PostDetail() {
 
       {/* Comments */}
       <div className="mt-6">
-        <h3 className="font-semibold mb-2">Kommentare</h3>
+        <h3 className="font-semibold mb-2">Comments</h3>
 
         {/* add comment */}
         <form onSubmit={handleAddComment} className="flex flex-col gap-2 mb-4">
@@ -224,12 +221,12 @@ export default function PostDetail() {
             type="text"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Schreibe einen Kommentar…"
+            placeholder="Write a comment..."
             className="border rounded px-3 py-2"
           />
           <div className="flex items-center gap-3">
             <label className="text-blue-600 hover:underline cursor-pointer">
-              Bild anhängen
+              Post an image
               <input
                 type="file"
                 accept="image/*"
@@ -247,7 +244,7 @@ export default function PostDetail() {
               disabled={postingComment || (!commentText.trim() && !commentFile)}
               className="ml-auto px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-50"
             >
-              {postingComment ? "Senden…" : "Senden"}
+              {postingComment ? "Sending..." : "Send"}
             </button>
           </div>
         </form>
@@ -305,9 +302,7 @@ export default function PostDetail() {
             })}
           </ul>
         ) : (
-          <div className="text-sm text-gray-500">
-            Keine Kommentare vorhanden.
-          </div>
+          <div className="text-sm text-gray-500">No comments yet.</div>
         )}
       </div>
     </div>

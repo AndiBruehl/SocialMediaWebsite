@@ -90,22 +90,22 @@ const Notification = () => {
       {open && (
         <div className="absolute right-0 mt-2 w-80 bg-white text-black rounded-lg shadow-xl z-50">
           <div className="flex items-center justify-between p-3 border-b">
-            <h4 className="font-semibold">Benachrichtigungen</h4>
+            <h4 className="font-semibold">Notifications</h4>
             <button
               onClick={markAllRead}
               className="text-sm text-blue-600 hover:underline disabled:opacity-50"
               disabled={loading || items.length === 0}
             >
-              Alle gelesen
+              Mark all as read
             </button>
           </div>
 
           <div className="max-h-96 overflow-auto">
             {loading ? (
-              <div className="p-4 text-sm text-gray-500">Laden…</div>
+              <div className="p-4 text-sm text-gray-500">Loading...</div>
             ) : items.length === 0 ? (
               <div className="p-4 text-sm text-gray-500">
-                Keine neuen Benachrichtigungen.
+                No new notifications.
               </div>
             ) : (
               items.map((n) => {
@@ -113,9 +113,7 @@ const Notification = () => {
                 const avatar =
                   resolveUrl(actor.profilePicture) || defaultAvatar;
                 const verb =
-                  n.type === "like"
-                    ? "hat deinen Post geliked"
-                    : "hat deinen Post kommentiert";
+                  n.type === "like" ? "liked your post" : "commented your post";
                 return (
                   <div
                     key={n._id}
@@ -131,7 +129,7 @@ const Notification = () => {
                     <div className="flex-1">
                       <div className="text-sm">
                         <span className="font-semibold">
-                          {actor.username || "Jemand"}
+                          {actor.username || "Some one"}
                         </span>{" "}
                         {verb}.
                       </div>
@@ -143,7 +141,7 @@ const Notification = () => {
                       to={`/post/${n.postId._id || n.postId}`} // ID auslesen, egal ob String oder Objekt
                       className="text-blue-600 text-sm hover:underline"
                     >
-                      Öffnen
+                      Open
                     </Link>
                   </div>
                 );

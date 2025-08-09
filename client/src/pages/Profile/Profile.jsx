@@ -56,7 +56,7 @@ const Profile = () => {
         }
       } catch (err) {
         console.error("Error loading profile:", err);
-        toast.error("Profil konnte nicht geladen werden.");
+        toast.error("Error loading profile.");
       }
     };
     fetchUser();
@@ -109,10 +109,10 @@ const Profile = () => {
     try {
       await axiosInstance.put(`/users/${user._id}/follow`, { userId: me._id });
       applyLocalFollowingChange(true);
-      toast.success(`Du folgst jetzt ${user.username}`);
+      toast.success(`You are now following ${user.username}`);
     } catch (e) {
-      console.error("Follow fehlgeschlagen:", e?.response?.data || e.message);
-      toast.error("Folgen fehlgeschlagen.");
+      console.error("Follow failed:", e?.response?.data || e.message);
+      toast.error("Follow failed.");
     } finally {
       setBusy(false);
     }
@@ -126,10 +126,10 @@ const Profile = () => {
         userId: me._id,
       });
       applyLocalFollowingChange(false);
-      toast.success(`Du folgst ${user.username} nicht mehr`);
+      toast.success(`You are not following ${user.username} anymore.`);
     } catch (e) {
-      console.error("Unfollow fehlgeschlagen:", e?.response?.data || e.message);
-      toast.error("Entfolgen fehlgeschlagen.");
+      console.error("Unfollow failed:", e?.response?.data || e.message);
+      toast.error("Unfollow failed.");
     } finally {
       setBusy(false);
     }
@@ -181,7 +181,7 @@ const Profile = () => {
                   onClick={() => navigate(`/messages/${user._id || userId}`)}
                   className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition"
                 >
-                  Nachricht senden
+                  Send a message...
                 </button>
 
                 {/* Follow/Unfollow */}
@@ -192,7 +192,7 @@ const Profile = () => {
                     disabled={busy}
                     className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition disabled:opacity-50"
                   >
-                    Entfolgen
+                    Unfollow
                   </button>
                 ) : (
                   <button
@@ -201,7 +201,7 @@ const Profile = () => {
                     disabled={busy}
                     className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 transition disabled:opacity-50"
                   >
-                    Folgen
+                    Follow
                   </button>
                 )}
               </>
