@@ -236,6 +236,7 @@ export default function Navbar() {
   };
 
   // Mark all read
+
   const markAllMessagesRead = async () => {
     const ids = unread.map((m) => m._id).filter(Boolean);
     if (ids.length === 0) return;
