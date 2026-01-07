@@ -39,16 +39,20 @@ const Profile = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Profil laden
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        // 1. Stop if no userId
+        if (!userId) return;
+
+        // 2. Prevent fetching if already loaded (optional optimization)
+        // if (user) return;
+
         const res = await axiosInstance.get(`/users/${userId}`);
         const u = res.data.userInfo;
         setUser(u);
         setFollowersCount(Array.isArray(u?.followers) ? u.followers.length : 0);
 
-        // Follows-Status lokal bestimmen
         if (me?._id && Array.isArray(me.following)) {
           setIsFollowing(
             me.following.map(String).includes(String(u._id || userId))
@@ -58,11 +62,18 @@ const Profile = () => {
         }
       } catch (err) {
         console.error("Error loading profile:", err);
-        toast.error("Error loading profile.");
+        // 3. Don't show "Error loading profile" toast on a generic 404 if we just don't show data yet
+        // Or let the fallback rendering handle the null user state.
+        if (err.response?.status === 404) {
+          console.log("User not found, likely deleted.");
+          // Optionally navigate back to home?
+          // navigate("/");
+        } else {
+          // toast.error("Error loading profile.");
+        }
       }
     };
-
-    if (userId) fetchUser(); // <--- CRITICAL FIX: Added () to call the function
+    fetchUser();
   }, [userId, me?._id, me?.following]);
 
   if (!user) {

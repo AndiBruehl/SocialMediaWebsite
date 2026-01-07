@@ -7,6 +7,9 @@ import { AuthContextProvider } from "./context/AuthContext.jsx";
 import SocketProvider from "./context/SocketProvider.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
+// Force Dark Mode Test
+localStorage.setItem("theme", "dark");
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
