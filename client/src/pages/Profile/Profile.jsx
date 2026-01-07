@@ -76,6 +76,7 @@ const Profile = () => {
   const isOwnProfile = me && String(me._id) === String(user._id || userId);
 
   const applyLocalFollowingChange = (follow) => {
+    // followers-Zahl im angezeigten Profil aktualisieren
     setFollowersCount((c) => (follow ? c + 1 : Math.max(0, c - 1)));
     setIsFollowing(follow);
 
@@ -135,7 +136,7 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col">
-      {/* Cover + Profile Picture */}
+      {/* Cover + Profile Picture - CHANGED TO CLASSES ONLY */}
       <div className="flex-[9] bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="relative h-[200px] bg-gray-200 dark:bg-gray-800">
           {coverUrl && (

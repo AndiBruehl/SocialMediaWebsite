@@ -1,42 +1,19 @@
 @import "tailwindcss";
 
-/* 1. FORCE COLORS FOR THE MAIN BACKGROUND AND ROOT */
+/* Global Page Background & Text */
 body {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
+  background-color: #ffffff;
+  color: #1f2937;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#root {
-  background-color: inherit;
-}
-
-/* 2. DARK MODE OVERRIDES */
+/* Dark Mode for Body */
 html.dark body {
-  background-color: #111827 !important;
-  color: #f3f4f6 !important;
+  background-color: #111827;
+  color: #f3f4f6;
 }
 
-/* 3. FORCE LIGHT MODE ON COMMON CONTAINERS (Bypassing Tailwind) */
-html:not(.dark) .bg-white,
-html:not(.dark) .bg-slate-50 {
-  background-color: #ffffff !important;
-  color: #1f2937 !important;
-}
-
-html:not(.dark) .text-gray-900,
-html:not(.dark) .text-slate-800 {
-  color: #1f2937 !important;
-}
-
-/* 4. FORCE DARK MODE ON COMMON CONTAINERS */
-html.dark .bg-white,
-html.dark .bg-slate-50,
-html.dark .bg-gray-100 {
-  background-color: #1f2937 !important; /* Dark Gray */
-  color: #f3f4f6 !important;
-}
-
+/* Force text color for specific dark text elements that might be missed */
 html.dark .text-gray-900,
 html.dark .text-slate-800,
 html.dark .text-black {
