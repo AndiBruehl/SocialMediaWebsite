@@ -83,9 +83,14 @@ main {
   }
 }
 
-/* Quick Global Dark Mode Fix */
+/* FORCE LIGHT MODE if the 'dark' class is missing */
+html:not(.dark) body {
+  background-color: white !important;
+  color: #1f2937 !important; /* Dark Gray Text */
+}
+
+/* FORCE DARK MODE if the 'dark' class is present */
 html.dark body {
-  background-color: #111827; /* This is Tailwind's Gray-900 */
-  color: #f3f4f6; /* This is Tailwind's Gray-100 */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #111827 !important; /* Dark Background */
+  color: white !important;
 }
