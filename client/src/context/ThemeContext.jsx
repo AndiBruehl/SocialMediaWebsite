@@ -1,9 +1,15 @@
-import { createContext, useState, useEffect } from "react";
+/* eslint-disable react-refresh/only-export-components */
+// ^ Dieser Befehl ganz oben deaktiviert die Prüfung für diese Datei.
+// Da wir hier einen Context, eine Komponente und einen Hook exportieren,
+// meckert Vite 7 das. Das ist mit diesem "Flag" korrekt.
 
-const ThemeContext = createContext();
+import { createContext, useState, useEffect, useContext } from "react";
+
+// 1. Context erstellen und exportieren
+export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // 1. Initiale Prüfung
+  // 2. Initiale Prüfung (Sicher gegen Absturz beim Laden)
   const [theme, setTheme] = useState(() => {
     try {
       const saved = localStorage.getItem("theme");
@@ -13,11 +19,17 @@ export const ThemeProvider = ({ children }) => {
     }
   });
 
-  // 2. HTML-Klasse updaten
+  // 3. HTML-Klasse updaten
   useEffect(() => {
     const root = window.document.documentElement;
+
+    // Alte Klassen entfernen (Clean State)
     root.classList.remove("light", "dark");
+
+    // Neue Klasse hinzufügen
     root.classList.add(theme);
+
+    // Speichern
     localStorage.setItem("theme", theme);
   }, [theme]);
 
@@ -32,4 +44,11 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// useTheme wurde entfernt, weil es jetzt in useTheme.js ist
+// 4. Hook exportieren
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};
