@@ -9,7 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 import defaultAvatar from "../../assets/avatar.webp";
 import { toast } from "react-toastify";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
 const resolveImageUrl = (src) => {
   if (!src || typeof src !== "string" || !src.trim()) return null;
   if (/^https?:\/\//i.test(src)) return src;

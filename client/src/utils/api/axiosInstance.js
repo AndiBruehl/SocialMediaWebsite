@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Standardexport anstelle von benannten Exporten
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:9000/api/v1",
+  baseURL: "https://socialmediawebsite-92x4.onrender.com/api/v1",
 });
 
 axiosInstance.interceptors.request.use((config) => {

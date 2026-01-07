@@ -6,7 +6,7 @@ import defaultAvatar from "../../assets/avatar.webp";
 import { AuthContext } from "../../context/AuthContext";
 import { BiSolidLike } from "react-icons/bi";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
 const isAbs = (s) => /^https?:\/\//i.test(s || "");
 const resolveUrl = (s) => (isAbs(s) ? s : s ? `${API_BASE}${s}` : "");
 

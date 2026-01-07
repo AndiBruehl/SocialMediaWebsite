@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: "https://socialmediawebsite-92x4.onrender.com",
   withCredentials: true,
 });
 

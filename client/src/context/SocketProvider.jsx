@@ -12,7 +12,9 @@ export default function SocketProvider({ children }) {
     const userId = currentUser?._id;
     if (!userId) return;
 
-    const url = import.meta.env.VITE_API_BASE || "http://localhost:9000";
+    const url =
+      import.meta.env.VITE_API_BASE ||
+      "https://socialmediawebsite-92x4.onrender.com";
     const s = io(url, {
       transports: ["websocket"],
       query: { userId },

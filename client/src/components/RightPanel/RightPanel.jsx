@@ -9,7 +9,7 @@ import defaultAvatar from "../../assets/avatar.webp";
 
 console.log("RightPanel loaded");
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
 const isAbs = (s) => /^https?:\/\//i.test(s || "");
 const url = (s) => (isAbs(s) ? s : s ? `${API_BASE}${s}` : "");
 

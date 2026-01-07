@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const API_BASE = "http://localhost:9000";
+const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
 const abs = (s) => /^https?:\/\//i.test(s || "");
 const url = (s) => (abs(s) ? s : s ? `${API_BASE}${s}` : "");
 
