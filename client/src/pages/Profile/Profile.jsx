@@ -10,6 +10,7 @@ import defaultAvatar from "../../assets/avatar.webp";
 import { toast } from "react-toastify";
 
 const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
+
 const resolveImageUrl = (src) => {
   if (!src || typeof src !== "string" || !src.trim()) return null;
   if (/^https?:\/\//i.test(src)) return src;
@@ -46,7 +47,8 @@ const Profile = () => {
         const u = res.data.userInfo;
         setUser(u);
         setFollowersCount(Array.isArray(u?.followers) ? u.followers.length : 0);
-        // Follows-Status lokal bestimmen (Strings vergleichen)
+
+        // Follows-Status lokal bestimmen
         if (me?._id && Array.isArray(me.following)) {
           setIsFollowing(
             me.following.map(String).includes(String(u._id || userId))
@@ -59,7 +61,8 @@ const Profile = () => {
         toast.error("Error loading profile.");
       }
     };
-    fetchUser();
+
+    if (userId) fetchUser(); // <--- CRITICAL FIX: Added () to call the function
   }, [userId, me?._id, me?.following]);
 
   if (!user) {
@@ -76,7 +79,6 @@ const Profile = () => {
   const isOwnProfile = me && String(me._id) === String(user._id || userId);
 
   const applyLocalFollowingChange = (follow) => {
-    // followers-Zahl im angezeigten Profil aktualisieren
     setFollowersCount((c) => (follow ? c + 1 : Math.max(0, c - 1)));
     setIsFollowing(follow);
 
@@ -135,9 +137,9 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      {/* Cover + Profile Picture - CHANGED TO CLASSES ONLY */}
-      <div className="flex-[9] bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
+      {/* Cover + Profile Picture */}
+      <div className="flex-[9]">
         <div className="relative h-[200px] bg-gray-200 dark:bg-gray-800">
           {coverUrl && (
             <img

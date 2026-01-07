@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
 import { io } from "socket.io-client";
-import ChatWindow from "./ChatWindow";
+import ChatWindow from "../../components/Messages/ChatWindow";
 
 const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
 const isAbs = (s) => /^https?:\/\//i.test(s || "");
@@ -138,7 +138,7 @@ export default function Messages() {
     if (!socket) return;
     const onNewMessage = (msg) => {
       if (!msg || !msg._id) return;
-      // only if this message is between me and the currently open draftPeer
+      // only if this message is between me and active peer
       const meId = String(me?._id || "");
       const draftId = String(draftPeer?._id || "");
       const isForDraft =
@@ -204,28 +204,39 @@ export default function Messages() {
 
   // LEFT
   const leftPanel = (
-    <div className="w-full h-full overflow-y-auto">
-      <div className="p-3 font-semibold border-b">Start a conversation.</div>
+    <div className="w-full h-full overflow-y-auto bg-white dark:bg-gray-800 transition-colors duration-300">
+      <div className="p-3 font-semibold border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
+        Start a conversation.
+      </div>
       {loadingUsers ? (
-        <div className="p-3 text-sm text-gray-500">Loading...</div>
+        <div className="p-3 text-sm text-gray-500 dark:text-gray-400">
+          Loading...
+        </div>
       ) : allUsers.length === 0 ? (
-        <div className="p-3 text-sm text-gray-500">No other users found.</div>
+        <div className="p-3 text-sm text-gray-500 dark:text-gray-400">
+          No other users found.
+        </div>
       ) : (
         <ul>
           {allUsers.map((u) => (
-            <li key={u._id} className="flex items-center gap-3 p-3 border-b">
+            <li
+              key={u._id}
+              className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
               <img
                 src={url(u.profilePicture) || "/default-avatar.png"}
                 alt=""
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600"
                 onContextMenu={(e) => e.preventDefault()}
                 draggable="false"
               />
               <div className="flex-1">
-                <div className="font-medium">{u.username}</div>
+                <div className="font-medium text-gray-900 dark:text-white">
+                  {u.username}
+                </div>
                 <button
                   onClick={() => startDraftWith(u)}
-                  className="mt-1 px-2 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-500"
+                  className="mt-1 px-2 py-1 text-sm rounded bg-blue-600 hover:bg-blue-500 text-white transition-colors"
                 >
                   Send a message
                 </button>
@@ -238,18 +249,23 @@ export default function Messages() {
   );
 
   return (
-    <div className="h-[calc(100vh-64px)] grid grid-cols-1 md:grid-cols-[320px_1fr] gap-0 bg-gray-100">
+    <div className="h-[calc(100vh-64px)] grid grid-cols-1 md:grid-cols-[320px_1fr] gap-0 bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       {/* Left */}
-      <div className="bg-white border-r">{leftPanel}</div>
+      <div className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:block h-full">
+        {leftPanel}
+      </div>
+
+      {/* Mobile Left Panel (Conditional Logic could go here if needed, using hidden md:block for now) */}
+      <div className="md:hidden h-full">{leftPanel}</div>
 
       {/* Right */}
-      <div className="bg-gray-100">
+      <div className="bg-white dark:bg-gray-900 h-full">
         {resolvingPeer ? (
-          <div className="h-full flex items-center justify-center text-gray-500">
+          <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
             Loading conversations…
           </div>
         ) : !draftPeer && !activeThread ? (
-          <div className="h-full flex items-center justify-center text-blue-900">
+          <div className="h-full flex items-center justify-center text-gray-900 dark:text-gray-100">
             No conversation selected
           </div>
         ) : draftPeer ? (

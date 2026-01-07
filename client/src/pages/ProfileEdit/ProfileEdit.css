@@ -6,18 +6,22 @@
 
 .card {
   width: min(100%, 980px);
-  background: #111827;
-  color: #e5e7eb;
-  border: 1px solid #1f2937;
+  /* Light Mode Defaults */
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
   border-radius: 14px;
   padding: 22px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .title {
   margin: 0 0 18px 0;
   font-size: 1.4rem;
   font-weight: 600;
+  color: #111827;
 }
 
 .form-grid {
@@ -33,19 +37,21 @@
 
 label {
   font-size: 0.92rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 input,
 textarea,
 select {
   width: 100%;
-  border: 1px solid #374151;
-  background: #0b1220;
-  color: #e5e7eb;
+  /* Light Mode Defaults */
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #111827;
   border-radius: 10px;
   padding: 10px 12px;
   outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 input:focus,
@@ -61,10 +67,11 @@ select:focus {
 }
 
 .image-field .image-picker {
-  border: 1px dashed #374151;
+  /* Light Mode Defaults */
+  border: 1px dashed #d1d5db;
   border-radius: 12px;
   padding: 12px;
-  background: #0b1220;
+  background: #f9fafb;
 }
 
 .preview {
@@ -77,12 +84,13 @@ select:focus {
   width: 100%;
   height: auto;
   border-radius: 12px;
-  border: 1px solid #1f2937;
+  /* Light Mode Border */
+  border: 1px solid #d1d5db;
 }
 
 .hint {
   font-size: 0.85rem;
-  color: #9ca3af;
+  color: #6b7280;
   margin: 6px 0 0;
 }
 
@@ -101,6 +109,7 @@ select:focus {
   padding: 10px 14px;
   cursor: pointer;
   font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .btn-primary {
@@ -114,7 +123,53 @@ select:focus {
 }
 
 .btn-secondary {
+  /* Light Mode Defaults */
   background: transparent;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+/* -------------------------- */
+/* DARK MODE OVERRIDES */
+/* -------------------------- */
+
+html.dark .card {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: #1f2937;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+html.dark .title {
+  color: #e5e7eb;
+}
+
+html.dark label {
+  color: #9ca3af;
+}
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+  border-color: #374151;
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+html.dark .image-field .image-picker {
+  border-color: #374151;
+  background: #0b1220;
+}
+
+html.dark .preview img {
+  border-color: #1f2937;
+}
+
+html.dark .hint {
+  color: #9ca3af;
+}
+
+html.dark .btn-secondary {
   color: #e5e7eb;
   border-color: #374151;
 }
