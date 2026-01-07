@@ -24,7 +24,12 @@ function App() {
     };
   }, []);
 
-  if (isFetching) return <div>Loading...</div>;
+  if (isFetching)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+        Loading...
+      </div>
+    );
 
   return (
     <>
@@ -56,7 +61,7 @@ function App() {
                 <Pages.ProfileEdit />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
             path="/post/:postId"
             element={
@@ -95,7 +100,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme="colored"
       />
     </>
   );
