@@ -82,3 +82,10 @@ main {
     padding: 8px !important;
   }
 }
+
+/* Quick Global Dark Mode Fix */
+html.dark body {
+  background-color: #111827; /* This is Tailwind's Gray-900 */
+  color: #f3f4f6; /* This is Tailwind's Gray-100 */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
