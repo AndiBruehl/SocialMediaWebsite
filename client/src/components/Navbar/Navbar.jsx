@@ -9,6 +9,8 @@ import SearchBar from "../Searchbar/Searchbar.jsx";
 import Notification from "../Notification/Notification.jsx";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
+// 1. IMPORT THE TOGGLE
+import ThemeToggle from "./ThemeToggle.jsx";
 
 import "./Navbar.css";
 
@@ -260,7 +262,8 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar bg-slate-600 text-white shadow-md">
+      {/* 2. UPDATED NAVBAR CLASSES FOR DARK MODE */}
+      <div className="navbar bg-white dark:bg-gray-900 text-slate-800 dark:text-white shadow-md transition-colors duration-300 border-b border-gray-200 dark:border-gray-700">
         <div className="navbar-left">
           <Logo />
         </div>
@@ -273,27 +276,29 @@ export default function Navbar() {
           <SearchBar
             onSearch={handleSearch}
             placeholder="Search users or posts..."
+            // Added dark classes for search input placeholder/bg if needed in SearchBar component
+            className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
           />
 
           {/* Search Dropdown */}
           {dropdownOpen && (
-            <div className="absolute left-0 right-0 top-[44px] z-50 bg-white text-slate-800 rounded-xl shadow-lg border overflow-hidden">
+            <div className="absolute left-0 right-0 top-[44px] z-50 bg-white dark:bg-gray-800 text-slate-800 dark:text-gray-100 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               {!hasResults ? (
-                <div className="px-4 py-3 text-sm text-gray-500">
+                <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
                   No results
                 </div>
               ) : (
                 <>
                   {results.users?.length > 0 && (
                     <div>
-                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         Users
                       </div>
                       <ul>
                         {results.users.map((u) => (
                           <li
                             key={u._id}
-                            className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-3"
+                            className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-3"
                             onClick={() => goToUser(u)}
                           >
                             <img
@@ -313,8 +318,8 @@ export default function Navbar() {
                   )}
 
                   {results.posts?.length > 0 && (
-                    <div className="border-t">
-                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <div className="border-t dark:border-gray-700">
+                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         Posts
                       </div>
                       <ul>
@@ -331,13 +336,13 @@ export default function Navbar() {
                           return (
                             <li
                               key={p._id}
-                              className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                              className="px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                               onClick={() => goToPost(p)}
                             >
                               <div className="text-sm line-clamp-2">
                                 {p.desc || "—"}
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 by {authorName}
                               </div>
                             </li>
@@ -358,7 +363,7 @@ export default function Navbar() {
           <div className="relative" ref={msgBoxRef}>
             <button
               type="button"
-              className="relative"
+              className="relative hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               onClick={toggleMsgOpen}
               title="Messages"
             >
@@ -369,12 +374,12 @@ export default function Navbar() {
             </button>
 
             {msgOpen && (
-              <div className="absolute right-0 mt-2 w-96 bg-white text-black rounded-lg shadow-xl z-50">
-                <div className="flex items-center justify-between p-3 border-b">
+              <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between p-3 border-b dark:border-gray-700">
                   <h4 className="font-semibold">Messages</h4>
                   <button
                     onClick={markAllMessagesRead}
-                    className="text-sm text-blue-600 hover:underline disabled:opacity-50"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline disabled:opacity-50"
                     disabled={msgLoading || unreadCount === 0}
                   >
                     Mark all as read
@@ -383,9 +388,11 @@ export default function Navbar() {
 
                 <div className="max-h-96 overflow-auto">
                   {msgLoading ? (
-                    <div className="p-4 text-sm text-gray-500">Loading…</div>
+                    <div className="p-4 text-sm text-gray-500 dark:text-gray-400">
+                      Loading…
+                    </div>
                   ) : unreadCount === 0 ? (
-                    <div className="p-4 text-sm text-gray-500">
+                    <div className="p-4 text-sm text-gray-500 dark:text-gray-400">
                       No new messages.
                     </div>
                   ) : (
@@ -399,7 +406,7 @@ export default function Navbar() {
                       return (
                         <div
                           key={m._id}
-                          className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer"
+                          className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                           onClick={() => openMessageFrom(m)}
                           title="Open message"
                         >
@@ -416,13 +423,13 @@ export default function Navbar() {
                                 {senderName}
                               </span>
                             </div>
-                            <div className="text-xs text-gray-600 line-clamp-2">
+                            <div className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
                               {m.text || "—"}
                             </div>
                           </div>
                           <Link
                             to={`/messages/${senderId}`}
-                            className="text-blue-600 text-sm hover:underline"
+                            className="text-blue-600 dark:text-blue-400 text-sm hover:underline"
                             onClick={(e) => e.stopPropagation()}
                           >
                             Open
@@ -441,15 +448,18 @@ export default function Navbar() {
             <Notification />
           </div>
 
+          {/* 3. TOGGLE BUTTON INSERTED HERE */}
+          <ThemeToggle />
+
           {isOpen ? (
             <BiX
-              className="menu-icon icon-size"
+              className="menu-icon icon-size hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               onClick={() => setIsOpen(false)}
               title="Close menu"
             />
           ) : (
             <BiMenu
-              className="menu-icon icon-size"
+              className="menu-icon icon-size hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               onClick={() => setIsOpen(true)}
               title="Open menu"
             />
@@ -458,8 +468,11 @@ export default function Navbar() {
       </div>
 
       {/* Slide-out Menu */}
+      {/* 4. UPDATED MENU CONTAINER FOR DARK MODE */}
       <div
-        className={`menu-container ${isOpen ? "open" : ""}`}
+        className={`menu-container ${
+          isOpen ? "open" : ""
+        } dark:bg-gray-900 dark:text-white transition-colors duration-300`}
         onMouseEnter={() => setIsHoveringMenu(true)}
         onMouseLeave={() => setIsHoveringMenu(false)}
       >
