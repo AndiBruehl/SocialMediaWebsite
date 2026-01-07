@@ -1,17 +1,19 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // 1. Initialize state safely
+  // 1. Initiale Prüfung
   const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "light";
+    try {
+      const saved = localStorage.getItem("theme");
+      return saved || "light";
+    } catch {
+      return "light";
     }
-    return "light";
   });
 
-  // 2. Apply the class to the HTML element whenever theme changes
+  // 2. HTML-Klasse updaten
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
@@ -19,9 +21,8 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // 3. The function to switch between light and dark
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   return (
@@ -31,6 +32,4 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// 4. Custom hook
-// eslint-disable-next-line react-refresh/only-export-components
-export const useTheme = () => useContext(ThemeContext);
+// useTheme wurde entfernt, weil es jetzt in useTheme.js ist
