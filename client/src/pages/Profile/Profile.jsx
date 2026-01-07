@@ -64,7 +64,7 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         <p>Loading profile…</p>
       </div>
     );
@@ -76,11 +76,9 @@ const Profile = () => {
   const isOwnProfile = me && String(me._id) === String(user._id || userId);
 
   const applyLocalFollowingChange = (follow) => {
-    // followers-Zahl im angezeigten Profil aktualisieren
     setFollowersCount((c) => (follow ? c + 1 : Math.max(0, c - 1)));
     setIsFollowing(follow);
 
-    // optional: currentUser.following lokal updaten (Context evtl. ohne Setter)
     try {
       const raw = localStorage.getItem("user");
       const parsed = raw ? JSON.parse(raw) : null;
@@ -138,8 +136,8 @@ const Profile = () => {
   return (
     <div className="flex flex-col">
       {/* Cover + Profile Picture */}
-      <div style={{ flex: 9, backgroundColor: "white" }}>
-        <div className="relative h-[200px] bg-gray-100">
+      <div className="flex-[9] bg-white dark:bg-gray-900 transition-colors duration-300">
+        <div className="relative h-[200px] bg-gray-200 dark:bg-gray-800">
           {coverUrl && (
             <img
               src={coverUrl}
@@ -151,35 +149,34 @@ const Profile = () => {
           <img
             src={avatarUrl}
             alt="Profile"
-            className="h-[100px] w-[100px] object-cover rounded-full absolute left-0 right-0 m-auto top-[150px] border-4 border-white shadow-md"
+            className="h-[100px] w-[100px] object-cover rounded-full absolute left-0 right-0 m-auto top-[150px] border-4 border-white dark:border-gray-900 shadow-md"
           />
         </div>
 
         {/* Username + Bio + Actions */}
         <div className="flex flex-col items-center mt-[75px] mx-[2%]">
-          <h1 className="font-bold text-2xl">
+          <h1 className="font-bold text-2xl text-gray-900 dark:text-white">
             {user.username || "Unknown user"}
           </h1>
-          <span className="text-sm text-gray-600 mb-2">
+          <span className="text-sm text-gray-600 dark:text-gray-300 mb-2">
             {typeof user.desc === "string" && user.desc.trim()
               ? user.desc
               : "No bio available"}
           </span>
 
           {/* Followers-Zähler (optional) */}
-          <span className="text-xs text-gray-500 mb-4">
+          <span className="text-xs text-gray-500 dark:text-gray-400 mb-4">
             {followersCount} Follower
           </span>
 
           {/* Buttons */}
           <div className="flex items-center gap-2 mb-5">
-            {/* Nachricht senden nur anzeigen, wenn fremdes Profil */}
             {!isOwnProfile && (
               <>
                 <button
                   type="button"
                   onClick={() => navigate(`/messages/${user._id || userId}`)}
-                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors"
                 >
                   Send a message...
                 </button>
@@ -190,7 +187,7 @@ const Profile = () => {
                     type="button"
                     onClick={handleUnfollow}
                     disabled={busy}
-                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition disabled:opacity-50"
+                    className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
                   >
                     Unfollow
                   </button>
@@ -199,7 +196,7 @@ const Profile = () => {
                     type="button"
                     onClick={handleFollow}
                     disabled={busy}
-                    className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 transition disabled:opacity-50"
+                    className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 transition-colors disabled:opacity-50"
                   >
                     Follow
                   </button>

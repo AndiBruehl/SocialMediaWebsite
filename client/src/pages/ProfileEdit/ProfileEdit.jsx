@@ -130,9 +130,9 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-200 text-slate-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl bg-slate-800/70 backdrop-blur border border-slate-700 rounded-2xl shadow-xl p-6 md:p-8">
-        <h2 className="text-2xl font-bold tracking-tight mb-6">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center p-6 transition-colors duration-300">
+      <div className="w-full max-w-5xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 md:p-8 transition-colors duration-300">
+        <h2 className="text-2xl font-bold tracking-tight mb-6 text-gray-900 dark:text-white">
           Update profile
         </h2>
 
@@ -144,7 +144,7 @@ const EditProfile = () => {
           {/* Left column — text fields */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-slate-300 mb-1">
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                 user name
               </label>
               <input
@@ -153,13 +153,13 @@ const EditProfile = () => {
                 onChange={handleChange}
                 required
                 placeholder="your user name"
-                className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-slate-300 mb-1">
+                <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                   Location
                 </label>
                 <input
@@ -167,11 +167,11 @@ const EditProfile = () => {
                   value={formData.location}
                   onChange={handleChange}
                   placeholder="Berlin, DE"
-                  className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-300 mb-1">
+                <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                   From
                 </label>
                 <input
@@ -179,32 +179,34 @@ const EditProfile = () => {
                   value={formData.from}
                   onChange={handleChange}
                   placeholder="from..."
-                  className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-slate-300 mb-1">Bio</label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Bio
+              </label>
               <textarea
                 name="desc"
                 value={formData.desc}
                 onChange={handleChange}
                 rows={4}
                 placeholder="Tell something about you..."
-                className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 placeholder-slate-400 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-slate-300 mb-1">
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                 Relationship
               </label>
               <select
                 name="relationship"
                 value={formData.relationship}
                 onChange={handleChange}
-                className="block w-full rounded-xl border border-slate-600 bg-slate-700/60 text-slate-100 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               >
                 <option value={1}>Single</option>
                 <option value={2}>In a relationship</option>
@@ -217,7 +219,7 @@ const EditProfile = () => {
           {/* Right column — images */}
           <div className="space-y-6">
             <div>
-              <label className="block text-sm text-slate-300 mb-1">
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                 Profile picture
               </label>
               <input
@@ -225,9 +227,9 @@ const EditProfile = () => {
                 accept="image/*"
                 ref={profileInputRef}
                 onChange={handleProfileChange}
-                className="block w-full rounded-xl border border-slate-600 bg-transparent text-slate-200 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-slate-600 file:bg-slate-700 file:text-slate-200 hover:file:bg-slate-600"
+                className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-transparent text-gray-700 dark:text-gray-200 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-gray-300 dark:file:border-gray-600 file:bg-gray-100 dark:file:bg-gray-700 file:text-gray-700 dark:file:text-gray-200 hover:file:bg-gray-200 dark:hover:file:bg-gray-600 transition-colors"
               />
-              <p className="text-slate-400 text-xs mt-2">
+              <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
                 PNG/JPG, please select only one picture
               </p>
               {profilePreview && (
@@ -235,12 +237,12 @@ const EditProfile = () => {
                   <img
                     src={profilePreview}
                     alt="profilePreview"
-                    className="w-full rounded-xl border border-slate-600"
+                    className="w-full rounded-xl border border-gray-300 dark:border-gray-600"
                   />
                   <button
                     type="button"
                     onClick={clearProfileImage}
-                    className="inline-flex items-center justify-center rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-100 hover:border-blue-500 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:border-blue-500 transition-colors"
                   >
                     remove
                   </button>
@@ -249,7 +251,7 @@ const EditProfile = () => {
             </div>
 
             <div>
-              <label className="block text-sm text-slate-300 mb-1">
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                 Cover image
               </label>
               <input
@@ -257,9 +259,9 @@ const EditProfile = () => {
                 accept="image/*"
                 ref={coverInputRef}
                 onChange={handleCoverChange}
-                className="block w-full rounded-xl border border-slate-600 bg-transparent text-slate-200 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-slate-600 file:bg-slate-700 file:text-slate-200 hover:file:bg-slate-600"
+                className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-transparent text-gray-700 dark:text-gray-200 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border file:border-gray-300 dark:file:border-gray-600 file:bg-gray-100 dark:file:bg-gray-700 file:text-gray-700 dark:file:text-gray-200 hover:file:bg-gray-200 dark:hover:file:bg-gray-600 transition-colors"
               />
-              <p className="text-slate-400 text-xs mt-2">
+              <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
                 Wide image recommended (e.g. 1500×500)
               </p>
               {coverPreview && (
@@ -267,12 +269,12 @@ const EditProfile = () => {
                   <img
                     src={coverPreview}
                     alt="Coverbild-Vorschau"
-                    className="w-full rounded-xl border border-slate-600"
+                    className="w-full rounded-xl border border-gray-300 dark:border-gray-600"
                   />
                   <button
                     type="button"
                     onClick={clearCoverImage}
-                    className="inline-flex items-center justify-center rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-100 hover:border-blue-500 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:border-blue-500 transition-colors"
                   >
                     remove
                   </button>
@@ -286,14 +288,14 @@ const EditProfile = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="inline-flex items-center justify-center rounded-xl border border-slate-600 px-4 py-2 font-semibold text-slate-100 hover:border-blue-500 transition"
+              className="inline-flex items-center justify-center rounded-xl border border-gray-300 dark:border-gray-600 px-4 py-2 font-semibold text-gray-700 dark:text-gray-200 hover:border-blue-500 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2 font-semibold text-white shadow"
+              className="inline-flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2 font-semibold text-white shadow transition-colors"
             >
               {saving ? "Saving..." : "Save"}
             </button>
