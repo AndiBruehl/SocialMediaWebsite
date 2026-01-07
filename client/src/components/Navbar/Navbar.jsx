@@ -10,7 +10,7 @@ import Notification from "../Notification/Notification.jsx";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
 // 1. IMPORT THE TOGGLE
-import ThemeToggle from "./ThemeToggle.jsx";
+import ThemeToggle from "../../components/ThemeToggle.jsx";
 
 import "./Navbar.css";
 
