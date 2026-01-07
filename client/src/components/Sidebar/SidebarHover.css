@@ -1,15 +1,28 @@
+:root {
+  --sidebar-height: 64px; /* Navbar height offset */
+}
+
 .sidebar-wrapper {
   position: fixed;
-  top: 64px;
+  top: var(--sidebar-height);
   left: 0;
-  height: calc(100vh - 64px);
+  height: calc(100vh - var(--sidebar-height));
   width: 60px;
-  background-color: #2a3f5c;
-  transition: width 0.3s ease;
+  /* Default Light Mode Background */
+  background-color: #ffffff;
+  /* Default Light Mode Text */
+  color: #111827;
+  transition: width 0.3s ease, background-color 0.3s ease;
   z-index: 1000;
   overflow: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+/* Dark Mode Override for Wrapper */
+html.dark .sidebar-wrapper {
+  background-color: #1f2937; /* Gray-800 */
+  color: #f3f4f6; /* Gray-100 */
 }
 
 .sidebar-wrapper:hover {
@@ -28,7 +41,7 @@
   display: flex;
   flex-direction: column;
   padding: 1rem 0.5rem 2rem;
-  color: white;
+  color: inherit; /* Inherits from wrapper */
   justify-content: flex-start;
   gap: 1rem;
 }
@@ -52,14 +65,26 @@
 .sidebar-link {
   display: flex;
   align-items: center;
-  color: #e5e7eb;
+  /* Default Text Color */
+  color: #4b5563;
   text-decoration: none;
   padding: 0.5rem;
   border-radius: 0.5rem;
   transition: background 0.2s ease;
 }
 
+/* Dark Mode Text Color for Links */
+html.dark .sidebar-link {
+  color: #9ca3af; /* Gray-400 */
+}
+
 .sidebar-link:hover {
+  /* Light Mode Hover */
+  background-color: #f3f4f6; /* Gray-100 */
+}
+
+/* Dark Mode Hover */
+html.dark .sidebar-link:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -89,9 +114,15 @@
   height: 40px;
   border-radius: 9999px;
   object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Light mode border */
   transition: transform 0.2s ease;
 }
+
+/* Dark Mode Border */
+html.dark .sidebar-content img {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .sidebar-content img:hover {
   transform: scale(1.05);
 }
@@ -111,15 +142,21 @@
 .online-badge::after {
   content: "";
   position: absolute;
-  right: -2px; /* leicht außerhalb unten rechts */
+  right: -2px;
   bottom: -2px;
   width: 10px;
   height: 10px;
   background: #22c55e; /* Tailwind green-500 */
-  border: 2px solid #243447; /* Border in Sidebar-Farbe für klaren Rand */
+  /* Border inherits text color of parent or needs specific override */
+  border: 2px solid #ffffff;
   border-radius: 50%;
   box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.8);
   animation: onlinePulse 1.8s ease-out infinite;
+}
+
+/* Adjust Border for Dark Mode on Badge */
+html.dark .online-badge::after {
+  border-color: #1f2937; /* Match Gray-800 background */
 }
 
 /* Pulsierende Animation */

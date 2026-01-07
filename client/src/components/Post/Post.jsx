@@ -58,6 +58,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
         const isValidOid =
           typeof uid === "string" && /^[0-9a-fA-F]{24}$/.test(uid);
         if (!isValidOid) {
+          // Alter Post mit kaputter ID / Demo-Daten => ruhig fallbacken
           setAuthor(null);
           return;
         }
@@ -125,7 +126,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
     try {
       await axiosInstance.delete(`/post/delete/${post._id}`);
       setMenuOpen(false);
-      if (onDeleted) onDeleted(post._id);
+      if (onDeleted) onDeleted(post._id); // Parent kann Karte entfernen
     } catch (e) {
       console.error("Deleting failed:", e?.response?.data || e.message);
     } finally {

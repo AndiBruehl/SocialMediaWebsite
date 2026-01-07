@@ -19,21 +19,23 @@ function OnlineRow({ user }) {
   return (
     <Link
       to={`/profile/${user?._id}`}
-      className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10"
+      className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       title={`Zu ${user?.username} wechseln`}
     >
       <img
         src={avatar}
         alt={user?.username || "avatar"}
-        className="w-8 h-8 rounded-full object-cover border border-white/30"
+        className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
         onContextMenu={(e) => e.preventDefault()}
         draggable="false"
       />
       <div className="flex-1">
-        <div className="text-sm font-medium">
+        <div className="text-sm font-medium text-gray-900 dark:text-white">
           {user?.username || "Unbekannt"}
         </div>
-        <div className="text-[11px] text-white/80">online</div>
+        <div className="text-[11px] text-gray-500 dark:text-gray-400">
+          online
+        </div>
       </div>
       <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-400" />
     </Link>
@@ -131,19 +133,11 @@ export const RightPanelHome = () => {
   }, [allUsers, onlineIds, me?._id]);
 
   return (
-    <div
-      style={{
-        flex: 2,
-        height: "100vh - 80px",
-        marginLeft: "2%",
-        maxWidth: "300px",
-      }}
-      className="bg-slate-400 p-5 rounded-[15px] text-white"
-    >
+    <div className="flex-[2] h-[calc(100vh-80px)] mx-[2%] max-w-[300px] bg-white dark:bg-gray-800 p-5 rounded-[15px] shadow-md text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <div className="pt-[20px] pr-[20px] space-y-6">
         {/* kleines Widget */}
         <div className="flex items-center justify-center">
-          <GrAnnounce className="w-[50px] h-[50px] mr-[10px]" />
+          <GrAnnounce className="w-[50px] h-[50px] mr-[10px] text-gray-700 dark:text-gray-200" />
           <span className="text-xs">
             <b>Current</b> Announcements:
           </span>
@@ -154,9 +148,11 @@ export const RightPanelHome = () => {
         <div>
           <h1 className="font-bold text-lg mb-3">ONLINE</h1>
           {loadingUsers ? (
-            <div className="text-sm text-white/80">Loading users...</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Loading users...
+            </div>
           ) : onlineUsers.length === 0 ? (
-            <div className="text-sm text-white/80">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               No one else is online at the moment.
             </div>
           ) : (
@@ -222,36 +218,31 @@ export const RightPanelProfile = ({ user }) => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300">
         <p>Loading profile details…</p>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        flex: 2,
-        height: "100vh - 80px",
-        marginLeft: "2%",
-        maxWidth: "300px",
-        textAlign: "end",
-      }}
-      className="bg-slate-400 shadow-md p-5 rounded-[15px] text-white"
-    >
+    <div className="flex-[2] h-[calc(100vh-80px)] mx-[2%] max-w-[300px] bg-white dark:bg-gray-800 shadow-md p-5 rounded-[15px] text-gray-900 dark:text-gray-100 text-right transition-colors duration-300">
       <h1 className="font-bold text-xl mb-[20px]">User Info</h1>
 
       <div className="mb-[30px]">
         <div className="mb-[10px]">
-          <span className="font-semibold mr-[15px] text-blue-900">City:</span>
+          <span className="font-semibold mr-[15px] text-blue-900 dark:text-blue-200">
+            City:
+          </span>
           <span>{user.city || user.location || "Not specified"}</span>
         </div>
         <div className="mb-[10px]">
-          <span className="font-semibold mr-[15px] text-blue-900">From:</span>
+          <span className="font-semibold mr-[15px] text-blue-900 dark:text-blue-200">
+            From:
+          </span>
           <span>{user.from || "Not specified"}</span>
         </div>
         <div className="mb-[10px]">
-          <span className="font-semibold mr-[15px] text-blue-900">
+          <span className="font-semibold mr-[15px] text-blue-900 dark:text-blue-200">
             Relationship:
           </span>
           <span>{relationshipMap[user.relationship] || "Unknown"}</span>
@@ -262,9 +253,11 @@ export const RightPanelProfile = ({ user }) => {
         Follower
       </h1>
       {loading ? (
-        <div className="text-sm text-white/80 text-left">Loading follower…</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 text-left">
+          Loading follower…
+        </div>
       ) : followers.length === 0 ? (
-        <div className="text-sm text-white/80 text-left">
+        <div className="text-sm text-gray-500 dark:text-gray-400 text-left">
           You don't have any follower yet.
         </div>
       ) : (
@@ -275,13 +268,13 @@ export const RightPanelProfile = ({ user }) => {
               <Link
                 key={f._id}
                 to={`/profile/${f._id}`}
-                className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10"
+                className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 title={`Zu ${f.username}`}
               >
                 <img
                   src={avatar}
                   alt={f.username}
-                  className="w-8 h-8 rounded-full object-cover border border-white/30"
+                  className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
                   onContextMenu={(e) => e.preventDefault()}
                   draggable="false"
                 />

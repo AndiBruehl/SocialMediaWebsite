@@ -1,4 +1,4 @@
-// src/components/NewsFeed/NewsFeed.jsx
+// client/src/components/NewsFeed/NewsFeed.jsx
 import React, { useEffect, useState } from "react";
 import CreatePost from "../CreatePost/CreatePost";
 import Post from "../Post/Post.jsx";
@@ -24,7 +24,7 @@ const NewsFeed = () => {
 
         setPosts(sortedPosts);
       } catch (error) {
-        console.error("Error loading the posts:", error);
+        console.error("Error loading posts:", error);
       }
     };
 
@@ -50,36 +50,29 @@ const NewsFeed = () => {
   };
 
   return (
-    <div
-      style={{
-        flex: 8,
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        minHeight: "calc(100vh - 80px)",
-      }}
-      className="bg-slate-200"
-    >
-      <br />
-      {!userId && <CreatePost />}
-      <br />
-      <hr />
-      {posts.length > 0 ? (
-        posts
-          .filter((post) => post && post._id && post.userId)
-          .map((post) => (
-            <Post
-              key={post._id}
-              post={post}
-              onDeleted={handleDeleted}
-              onUpdated={handleUpdated}
-            />
-          ))
-      ) : (
-        <p className="mt-6 text-gray-500">No Posts found...</p>
-      )}
-      <br />
-      <hr />
+    <div className="flex-[8] flex flex-col items-center min-h-[calc(100vh-80px)] bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="w-[97%] py-4">{!userId && <CreatePost />}</div>
+
+      <div className="w-[97%] border-b border-gray-200 dark:border-gray-700 mb-4" />
+
+      <div className="w-[97%] flex flex-col gap-4">
+        {posts.length > 0 ? (
+          posts
+            .filter((post) => post && post._id && post.userId)
+            .map((post) => (
+              <Post
+                key={post._id}
+                post={post}
+                onDeleted={handleDeleted}
+                onUpdated={handleUpdated}
+              />
+            ))
+        ) : (
+          <p className="mt-6 text-gray-500 dark:text-gray-400 text-center">
+            No Posts found...
+          </p>
+        )}
+      </div>
     </div>
   );
 };

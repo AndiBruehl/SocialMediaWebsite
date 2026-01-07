@@ -79,7 +79,7 @@ const Notification = () => {
     <div className="relative" ref={boxRef}>
       <button
         type="button"
-        className="relative"
+        className="relative hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
         onClick={handleToggle}
         title="Notifications"
       >
@@ -88,12 +88,12 @@ const Notification = () => {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white text-black rounded-lg shadow-xl z-50">
-          <div className="flex items-center justify-between p-3 border-b">
+        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-3 border-b dark:border-gray-700">
             <h4 className="font-semibold">Notifications</h4>
             <button
               onClick={markAllRead}
-              className="text-sm text-blue-600 hover:underline disabled:opacity-50"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline disabled:opacity-50"
               disabled={loading || items.length === 0}
             >
               Mark all as read
@@ -102,9 +102,11 @@ const Notification = () => {
 
           <div className="max-h-96 overflow-auto">
             {loading ? (
-              <div className="p-4 text-sm text-gray-500">Loading...</div>
+              <div className="p-4 text-sm text-gray-500 dark:text-gray-400">
+                Loading...
+              </div>
             ) : items.length === 0 ? (
-              <div className="p-4 text-sm text-gray-500">
+              <div className="p-4 text-sm text-gray-500 dark:text-gray-400">
                 No new notifications.
               </div>
             ) : (
@@ -117,7 +119,7 @@ const Notification = () => {
                 return (
                   <div
                     key={n._id}
-                    className="flex items-center gap-3 p-3 hover:bg-gray-50"
+                    className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                   >
                     <img
                       src={avatar}
@@ -131,15 +133,17 @@ const Notification = () => {
                         <span className="font-semibold">
                           {actor.username || "Some one"}
                         </span>{" "}
-                        {verb}.
+                        <span className="text-gray-600 dark:text-gray-300">
+                          {verb}.
+                        </span>
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400 dark:text-gray-500">
                         {/* optional: relative Zeit hier */}
                       </div>
                     </div>
                     <Link
-                      to={`/post/${n.postId._id || n.postId}`} // ID auslesen, egal ob String oder Objekt
-                      className="text-blue-600 text-sm hover:underline"
+                      to={`/post/${n.postId._id || n.postId}`}
+                      className="text-blue-600 dark:text-blue-400 text-sm hover:underline"
                     >
                       Open
                     </Link>

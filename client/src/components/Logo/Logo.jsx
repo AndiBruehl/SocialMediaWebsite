@@ -1,12 +1,14 @@
+import { Link } from "react-router-dom";
+
 const Logo = () => {
   return (
-    <a href="/">
+    <Link to="/">
       <img
         src="/logo.png"
         alt="velvet-vibe-logo"
-        style={{ height: "60px", width: "auto" }}
+        className="h-[60px] w-auto object-contain"
       />
-    </a>
+    </Link>
   );
 };
 

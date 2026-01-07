@@ -72,13 +72,13 @@ export default function CreatePost() {
         location: location.trim(),
       });
 
-      // Felder zurücksetzen
+      // Reset fields
       setDesc("");
       setFile(null);
       setLocation("");
       setShowLocation(false);
 
-      // ✅ Erfolg-Toast + Auto-Reload nach Ablauf
+      // Success Toast + Auto-Reload
       toast.success("Post created successfully!", {
         autoClose: 1800,
         onClose: () => window.location.reload(),
@@ -94,14 +94,14 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="w-[97%] shadow-lg rounded-lg bg-slate-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 transition-colors duration-300">
+    <div className="w-[97%] shadow-lg rounded-lg bg-white dark:bg-gray-800 border border-transparent dark:border-gray-700 transition-colors duration-300">
       <div className="p-3 sm:p-4">
         <div className="flex items-center gap-3">
           <Link to={`/profile/${user?._id || ""}`}>
             <img
               src={avatar}
               alt="profile"
-              className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-gray-600"
+              className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-600 transition-colors"
               onContextMenu={(e) => e.preventDefault()}
               draggable="false"
             />
@@ -111,7 +111,7 @@ export default function CreatePost() {
             placeholder="What's on your mind?"
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            className="flex-1 bg-transparent border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+            className="flex-1 bg-transparent border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
         </div>
 
@@ -120,7 +120,7 @@ export default function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               alt="preview"
-              className="max-h-60 rounded-lg object-contain border border-gray-200 dark:border-gray-600"
+              className="max-h-60 rounded-lg object-contain border border-gray-300 dark:border-gray-600"
               onContextMenu={(e) => e.preventDefault()}
               draggable="false"
             />
@@ -165,7 +165,7 @@ export default function CreatePost() {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-xl disabled:opacity-50 transition-opacity"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-xl disabled:opacity-50 transition-colors"
             >
               {loading ? "Posting..." : "POST!"}
             </button>

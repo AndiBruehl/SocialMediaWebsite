@@ -1,7 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import Links from "./Links";
-import FriendsList from "./Friends"; // <- dein neues FriendsList, das { user } erwartet
-import "./SidebarHover.css";
+import FriendsList from "./Friends";
 import { AuthContext } from "../../context/AuthContext";
 import axiosInstance from "../../utils/api/axiosInstance";
 
@@ -21,7 +20,7 @@ export default function Sidebar() {
   const [followingUsers, setFollowingUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Hilfsfunktion: einzelne User laden (falls following nur IDs enthält)
+  // Hilfsfunktion: einzelne User laden
   const fetchUser = async (id) => {
     try {
       const res = await axiosInstance.get(`/users/${id}`);
@@ -41,8 +40,7 @@ export default function Sidebar() {
       }
 
       try {
-        // Falls dein /users/:id bereits "following" **populiert** zurückgibt,
-        // reicht ein Request:
+        // User-Details holen
         const res = await axiosInstance.get(`/users/${me._id}`);
         const userInfo = res.data?.userInfo || {};
         let list = userInfo.following || [];
@@ -71,18 +69,20 @@ export default function Sidebar() {
   }, [me?._id]);
 
   return (
-    <aside className="sidebar-wrapper">
-      <div className="sidebar-content">
+    <aside className="fixed top-0 left-0 h-screen w-[25%] lg:w-[300px] bg-white dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 z-50 hidden md:flex flex-col p-4 transition-colors duration-300">
+      <div className="flex-1 overflow-y-auto">
         <Links />
-        <br />
 
-        <ul className="m-0 p-0">
+        {/* Separator instead of <br /> */}
+        <hr className="my-4 border-gray-300 dark:border-gray-700" />
+
+        <ul className="m-0 p-0 list-none">
           {loading ? (
-            <li className="px-3 py-2 text-sm text-gray-400">
+            <li className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
               Lade gefolgte Nutzer…
             </li>
           ) : followingUsers.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-gray-400">
+            <li className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
               Du folgst noch niemandem.
             </li>
           ) : (

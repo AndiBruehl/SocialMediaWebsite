@@ -11,39 +11,64 @@ import { Link } from "react-router-dom";
 
 export default function Links() {
   return (
-    <ul className="sidebar-links">
-      <Link to="/" className="sidebar-link">
-        <BiHomeAlt className="sidebar-icon" />
-        <span className="link-text">Feed</span>
+    <ul className="flex flex-col gap-1">
+      <Link
+        to="/"
+        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
+      >
+        <BiHomeAlt className="text-xl" />
+        <span className="font-medium">Feed</span>
       </Link>
-      {/* <Link to="/groups" className="sidebar-link">
-        <MdGroups className="sidebar-icon" />
-        <span className="link-text">Groups</span>
+
+      {/* <Link to="/groups" className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors">
+        <MdGroups className="text-xl" />
+        <span className="font-medium">Groups</span>
       </Link> */}
-      <Link to="/messages" className="sidebar-link">
-        <PiChatsBold className="sidebar-icon" />
-        <span className="link-text">Chats</span>
+
+      <Link
+        to="/messages"
+        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
+      >
+        <PiChatsBold className="text-xl" />
+        <span className="font-medium">Chats</span>
       </Link>
-      {/* <Link to="/bookmarks" className="sidebar-link">
-        <HiOutlineBookmark className="sidebar-icon" />
-        <span className="link-text">Bookmarks</span>
-      </Link>
-      <Link to="/questions" className="sidebar-link">
-        <AiOutlineQuestionCircle className="sidebar-icon" />
-        <span className="link-text">Questions</span>
-      </Link>
-      <Link to="/jobs" className="sidebar-link">
-        <LiaBriefcaseSolid className="sidebar-icon" />
-        <span className="link-text">Jobs</span>
-      </Link>
-      <Link to="/courses" className="sidebar-link">
-        <PiGraduationCapBold className="sidebar-icon" />
-        <span className="link-text">Courses</span>
-      </Link>
-      <Link to="/events" className="sidebar-link">
-        <FaRegCalendarCheck className="sidebar-icon" />
-        <span className="link-text">Events</span>
+
+      {/* <Link to="/bookmarks" className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors">
+        <HiOutlineBookmark className="text-xl" />
+        <span className="font-medium">Bookmarks</span>
       </Link> */}
+
+      <Link
+        to="/questions"
+        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
+      >
+        <AiOutlineQuestionCircle className="text-xl" />
+        <span className="font-medium">Questions</span>
+      </Link>
+
+      <Link
+        to="/jobs"
+        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
+      >
+        <LiaBriefcaseSolid className="text-xl" />
+        <span className="font-medium">Jobs</span>
+      </Link>
+
+      <Link
+        to="/courses"
+        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
+      >
+        <PiGraduationCapBold className="text-xl" />
+        <span className="font-medium">Courses</span>
+      </Link>
+
+      <Link
+        to="/events"
+        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-colors"
+      >
+        <FaRegCalendarCheck className="text-xl" />
+        <span className="font-medium">Events</span>
+      </Link>
     </ul>
   );
 }

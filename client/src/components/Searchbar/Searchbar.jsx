@@ -1,4 +1,4 @@
-// src/components/SearchBar/SearchBar.jsx
+// client/src/components/SearchBar/SearchBar.jsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 
@@ -67,13 +67,13 @@ export default function SearchBar({
     >
       <div className="relative w-full">
         <BiSearchAlt
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
           aria-hidden="true"
         />
         <input
           type="search"
           placeholder={placeholder}
-          className="w-full pl-12 pr-8 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-12 pr-8 border border-gray-300 dark:border-gray-600 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search"
@@ -85,7 +85,7 @@ export default function SearchBar({
             onClick={handleClear}
             aria-label="Clear search"
             title="Clear"
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-100"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             ×
           </button>
