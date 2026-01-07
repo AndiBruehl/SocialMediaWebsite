@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/api/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
 import { io } from "socket.io-client";
-import ChatWindow from ".ChatWindow";
+import ChatWindow from "./ChatWindow";
 
 const API_BASE = "https://socialmediawebsite-92x4.onrender.com";
 const isAbs = (s) => /^https?:\/\//i.test(s || "");
