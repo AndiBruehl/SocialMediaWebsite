@@ -20,7 +20,12 @@ const PORT = process.env.PORT || 9000;
 app.use(express.json({ limit: "10mb" }));
 app.use(helmet());
 app.use(morgan("common"));
-app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 // static images (if you need them for avatars, etc.)
 app.use(
