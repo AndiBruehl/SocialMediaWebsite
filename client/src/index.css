@@ -67,3 +67,51 @@ html.dark .bg-gray-100 {
 html.dark .border-gray-300 {
   border-color: #4b5563 !important;
 }
+
+/* --- EMERGENCY DARK MODE FIX --- */
+
+/* 1. Force Main Containers (Feed, Navbar, Profile, Cards) to Dark */
+html.dark .bg-white {
+  background-color: #111827 !important; /* Dark Gray */
+  border-color: #1f2937 !important;
+}
+
+html.dark .bg-slate-50 {
+  background-color: #111827 !important;
+}
+
+html.dark .bg-slate-200,
+html.dark .bg-slate-300,
+html.dark .bg-slate-400 {
+  background-color: #1f2937 !important;
+}
+
+/* 2. Force Text Colors to White in Dark Mode */
+html.dark .text-gray-900,
+html.dark .text-slate-800,
+html.dark .text-black {
+  color: #ffffff !important;
+}
+
+html.dark .text-slate-600 {
+  color: #d1d5db !important; /* Lighter gray for secondary text */
+}
+
+html.dark .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+/* 3. Force Borders to Dark */
+html.dark .border-gray-200,
+html.dark .border-slate-200 {
+  border-color: #374151 !important;
+}
+
+/* 4. Fix Inputs (Background) */
+html.dark .bg-gray-100 {
+  background-color: #374151 !important; /* Darker gray for inputs */
+}
+
+html.dark .border-gray-300 {
+  border-color: #4b5563 !important;
+}
