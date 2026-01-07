@@ -40,7 +40,6 @@ const Post = ({ post, onDeleted, onUpdated }) => {
   useEffect(() => setEditDesc(post?.desc || ""), [post?.desc]);
 
   // Autor laden
-  // ---- in Post.jsx: Autor laden robust machen ----
   useEffect(() => {
     const loadAuthor = async () => {
       try {
@@ -59,7 +58,6 @@ const Post = ({ post, onDeleted, onUpdated }) => {
         const isValidOid =
           typeof uid === "string" && /^[0-9a-fA-F]{24}$/.test(uid);
         if (!isValidOid) {
-          // Alter Post mit kaputter ID / Demo-Daten => ruhig fallbacken
           setAuthor(null);
           return;
         }
@@ -127,7 +125,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
     try {
       await axiosInstance.delete(`/post/delete/${post._id}`);
       setMenuOpen(false);
-      if (onDeleted) onDeleted(post._id); // Parent kann Karte entfernen
+      if (onDeleted) onDeleted(post._id);
     } catch (e) {
       console.error("Deleting failed:", e?.response?.data || e.message);
     } finally {
@@ -139,7 +137,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
   const postImg = resolveUrl(post?.img);
 
   return (
-    <div className="w-[97%] mb-6 rounded-lg bg-white shadow-md relative">
+    <div className="w-[97%] mb-6 rounded-lg bg-white dark:bg-gray-800 shadow-md relative border border-transparent dark:border-gray-700 transition-colors duration-300">
       {/* Header */}
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center justify-between">
@@ -158,7 +156,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
               <img
                 src={avatarSrc}
                 alt={author?.username || "avatar"}
-                className="w-10 h-10 rounded-full object-cover border border-slate-200"
+                className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-gray-600"
                 onContextMenu={(e) => e.preventDefault()}
                 draggable="false"
               />
@@ -171,11 +169,11 @@ const Post = ({ post, onDeleted, onUpdated }) => {
                     ? post.userId
                     : post.userId?._id || ""
                 }`}
-                className="font-semibold leading-5 hover:underline"
+                className="font-semibold leading-5 hover:underline text-gray-900 dark:text-white"
               >
                 {author?.username || "Unknown"}
               </Link>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 {post?.createdAt
                   ? formatDistanceToNow(new Date(post.createdAt), {
                       addSuffix: true,
@@ -187,30 +185,32 @@ const Post = ({ post, onDeleted, onUpdated }) => {
 
           <div className="flex items-center gap-3">
             {post?.location && (
-              <span className="text-xs text-gray-500">📍 {post.location}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                📍 {post.location}
+              </span>
             )}
 
             {isMine && (
               <div className="relative">
                 <button
                   type="button"
-                  className="p-2 rounded-full hover:bg-slate-100"
+                  className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors"
                   onClick={() => setMenuOpen((o) => !o)}
                   aria-label="Post options"
                 >
-                  <MdOutlineMoreVert className="text-xl" />
+                  <MdOutlineMoreVert className="text-xl text-gray-700 dark:text-gray-200" />
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-50">
+                  <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 transition-colors">
                     <button
-                      className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm"
+                      className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-100"
                       onClick={handleOpenEdit}
                     >
                       Update post
                     </button>
                     <button
-                      className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm text-red-600 disabled:opacity-50"
+                      className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-gray-700 text-sm text-red-600 dark:text-red-400 disabled:opacity-50"
                       onClick={handleDelete}
                       disabled={deleting}
                     >
@@ -227,7 +227,9 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       {/* Text */}
       {post?.desc && (
         <div className="px-4 pb-2">
-          <p className="whitespace-pre-wrap break-words">{post.desc}</p>
+          <p className="whitespace-pre-wrap break-words text-gray-800 dark:text-gray-200">
+            {post.desc}
+          </p>
         </div>
       )}
 
@@ -237,7 +239,7 @@ const Post = ({ post, onDeleted, onUpdated }) => {
           <img
             src={postImg}
             alt="post"
-            className="w-full max-h-[520px] object-contain"
+            className="w-full max-h-[520px] object-contain bg-black"
             loading="lazy"
             onContextMenu={(e) => e.preventDefault()}
             draggable="false"
@@ -256,21 +258,21 @@ const Post = ({ post, onDeleted, onUpdated }) => {
             className={`inline-flex items-center gap-2 px-3 py-1 rounded border transition ${
               isLikedByMe
                 ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white"
+                : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"
             }`}
             title={isLikedByMe ? "Unlike" : "Like"}
           >
             <BiSolidLike />
             <span className="text-sm">{likes.length}</span>
           </button>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-gray-300">
             {likes.length === 1 ? "1 like/s" : `${likes.length} like/s`}
           </span>
         </div>
 
         <Link
           to={`/post/${post._id}`}
-          className="text-sm text-blue-700 hover:underline"
+          className="text-sm text-blue-700 dark:text-blue-400 hover:underline"
         >
           {Array.isArray(post.comments) ? post.comments.length : 0} comments
         </Link>
@@ -279,19 +281,21 @@ const Post = ({ post, onDeleted, onUpdated }) => {
       {/* Edit Modal */}
       {editOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-4">
-            <h3 className="font-semibold mb-3">Update post</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-4 border border-gray-200 dark:border-gray-700 transition-colors">
+            <h3 className="font-semibold mb-3 text-gray-900 dark:text-white">
+              Update post
+            </h3>
             <form onSubmit={handleSubmitEdit} className="space-y-3">
               <textarea
                 value={editDesc}
                 onChange={(e) => setEditDesc(e.target.value)}
-                className="w-full border rounded p-2 min-h-[120px]"
+                className="w-full border rounded p-2 min-h-[120px] bg-white dark:bg-gray-900 text-black dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Was möchtest du ändern?"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
-                  className="px-3 py-2 rounded border"
+                  className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
                   onClick={() => setEditOpen(false)}
                 >
                   Cancel

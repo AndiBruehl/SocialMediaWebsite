@@ -94,14 +94,14 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="w-[97%] shadow-lg rounded-lg bg-slate-50">
+    <div className="w-[97%] shadow-lg rounded-lg bg-slate-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 transition-colors duration-300">
       <div className="p-3 sm:p-4">
         <div className="flex items-center gap-3">
           <Link to={`/profile/${user?._id || ""}`}>
             <img
               src={avatar}
               alt="profile"
-              className="w-12 h-12 rounded-full object-cover border"
+              className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-gray-600"
               onContextMenu={(e) => e.preventDefault()}
               draggable="false"
             />
@@ -111,7 +111,7 @@ export default function CreatePost() {
             placeholder="What's on your mind?"
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            className="flex-1 bg-transparent border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 bg-transparent border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
 
@@ -120,7 +120,7 @@ export default function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               alt="preview"
-              className="max-h-60 rounded-lg object-contain border"
+              className="max-h-60 rounded-lg object-contain border border-gray-200 dark:border-gray-600"
               onContextMenu={(e) => e.preventDefault()}
               draggable="false"
             />
@@ -134,15 +134,15 @@ export default function CreatePost() {
               placeholder="Add a location..."
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full bg-transparent border rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-transparent border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             />
           </div>
         )}
 
-        <hr className="my-3" />
+        <hr className="my-3 border-gray-300 dark:border-gray-700" />
 
         <div className="flex flex-wrap items-center gap-4">
-          <label className="flex items-center gap-2 text-blue-600 hover:text-blue-700 cursor-pointer">
+          <label className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer transition-colors">
             <MdPermMedia /> <span>Media</span>
             <input
               type="file"
@@ -155,7 +155,7 @@ export default function CreatePost() {
           <button
             type="button"
             onClick={() => setShowLocation((s) => !s)}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
+            className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
           >
             <MdLocationPin /> <span>Location</span>
           </button>
@@ -165,7 +165,7 @@ export default function CreatePost() {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-xl disabled:opacity-50"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-xl disabled:opacity-50 transition-opacity"
             >
               {loading ? "Posting..." : "POST!"}
             </button>
